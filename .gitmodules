@@ -1,0 +1,3 @@
+[submodule "MoveMe"]
+	path = MoveMe
+	url = https://github.com/Akson/MoveMe.git
