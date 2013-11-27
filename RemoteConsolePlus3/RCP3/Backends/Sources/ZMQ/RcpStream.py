@@ -1,7 +1,7 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
 import zmq
 import thread
-import time
+import unicodedata
 
 class Backend(object):
     def __init__(self, parentNode):
@@ -20,19 +20,16 @@ class Backend(object):
         self._stopListening = True
     
     def GetParameters(self):
-        """
-        Returns a dictionary with object parameters, their values, 
-        limits and ways to change them.
-        """
-        return {}
+        return {"streamsList":self._streamsList, "serverAddress":self._serverAddress}
     
     def SetParameters(self, parameters):
-        self._streamsList = ["Stream12", "Stream14"]
-        self._serverAddress = "tcp://127.0.0.1:55559"
-        self._reconnectToServer = True
+        self._streamsList = parameters.get("streamsList", [])
+        self._serverAddress = parameters.get("serverAddress", None)
         
-        if not self._listeningThreadRunning:
-            thread.start_new_thread(self.StreamListenerThreadFunc, ())
+        if self._serverAddress:
+            self._reconnectToServer = True
+            if not self._listeningThreadRunning:
+                thread.start_new_thread(self.StreamListenerThreadFunc, ())
         
         
         
@@ -43,7 +40,7 @@ class Backend(object):
                 socket = zmq.Context.instance().socket(zmq.SUB)
                 socket.connect(self._serverAddress)
                 for streamName in self._streamsList:
-                    socket.setsockopt(zmq.SUBSCRIBE, streamName)
+                    socket.setsockopt(zmq.SUBSCRIBE, str(streamName))
                 self._reconnectToServer = False
 
             #Wait for incoming messages 

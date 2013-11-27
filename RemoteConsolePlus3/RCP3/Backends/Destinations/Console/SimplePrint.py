@@ -26,3 +26,9 @@ class Backend(object):
         should be called with an appropriate message.
         """
         print message
+
+    def Delete(self):
+        """
+        This method is called when a parent node is deleted.
+        """
+        pass
