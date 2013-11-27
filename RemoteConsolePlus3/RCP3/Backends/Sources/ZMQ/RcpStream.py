@@ -1,7 +1,7 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
 import zmq
 import thread
-import unicodedata
+import json
 
 class Backend(object):
     def __init__(self, parentNode):
@@ -52,4 +52,18 @@ class Backend(object):
                 self.ProcessIncomingZmqMessage(zmqMessage)
 
     def ProcessIncomingZmqMessage(self, zmqMessage):
-        print zmqMessage
+        """
+        Incoming message format is:
+        [Stream name string]0[Information in JSON format]0[Data]
+        """
+        parsedMessage = {}
+        messageComponents = zmqMessage.split(chr(0), 2)
+        parsedMessage["Stream"] = messageComponents[0]
+        
+        parsedMessage["Info"] = {}
+        if messageComponents[1] != "":
+            parsedMessage["Info"] = json.loads(messageComponents[1])
+        
+        parsedMessage["Data"] = messageComponents[2]
+
+        self._parentNode.SendMessage(parsedMessage)
