@@ -59,11 +59,9 @@ class Backend(object):
         parsedMessage = {}
         messageComponents = zmqMessage.split(chr(0), 2)
         parsedMessage["Stream"] = messageComponents[0]
-        
         parsedMessage["Info"] = {}
         if messageComponents[1] != "":
             parsedMessage["Info"] = json.loads(messageComponents[1])
-        
         parsedMessage["Data"] = messageComponents[2]
 
         self._parentNode.SendMessage(parsedMessage)

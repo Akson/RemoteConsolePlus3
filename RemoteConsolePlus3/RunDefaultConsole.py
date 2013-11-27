@@ -2,6 +2,7 @@
 import wx
 import logging
 from RCP3.RCPCanvas import RCPCanvas
+from RCP3.OutputWindowsContainer import OutputWindowsContainer
 
 class CanvasWindow(wx.Frame):
     def __init__(self, *args, **kw):
@@ -21,4 +22,5 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     app = wx.PySimpleApp()
     CanvasWindow(None).Show()
+    OutputWindowsContainer.Instance().Show()
     app.MainLoop()
