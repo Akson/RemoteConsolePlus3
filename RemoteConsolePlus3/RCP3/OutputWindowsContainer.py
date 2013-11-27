@@ -11,7 +11,9 @@ class OutputWindowsContainer(wx.Frame):
         self._auiMgr = aui.AuiManager()
         self._auiMgr.SetManagedWindow(self)
         
-    def AddNewSubWindow(self, subWindow, caption=None, pos=wx.TOP):
+    def AddNewSubWindow(self, subWindow, caption=None, pos=wx.LEFT):
+        if len(self._auiMgr.GetAllPanes()) == 0:
+            pos=wx.CENTER
         self._auiMgr.AddPane(subWindow, pos, caption)
         self._auiMgr.GetPaneByWidget(subWindow).DestroyOnClose(True)
         self._auiMgr.Update()
