@@ -18,9 +18,17 @@ class OutputWindowsContainer(wx.Frame):
         self._auiMgr.GetPaneByWidget(subWindow).DestroyOnClose(True)
         self._auiMgr.Update()
         
+
     _instance = None
     @staticmethod
     def Instance():
         if OutputWindowsContainer._instance == None:
             OutputWindowsContainer._instance = OutputWindowsContainer()
         return OutputWindowsContainer._instance
+    
+    @staticmethod
+    def CreateNewOutputWindowsContainer():
+        oldWindow = OutputWindowsContainer._instance
+        OutputWindowsContainer._instance = OutputWindowsContainer()
+        oldWindow.Destroy()
+        OutputWindowsContainer.Instance().Show()

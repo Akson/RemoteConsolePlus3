@@ -6,13 +6,13 @@ from RCP3.OutputWindowsContainer import OutputWindowsContainer
 
 class CanvasWindow(wx.Frame):
     def __init__(self, *args, **kw):
-        wx.Frame.__init__(self, size=[1280, 720], *args, **kw)
+        wx.Frame.__init__(self, size=[800, 600], *args, **kw)
         s = wx.BoxSizer(wx.VERTICAL)
 
         canvas = RCPCanvas(self)
-        canvas.CreateNodeFromDescriptionAtPosition('{"NodeClass": "SourceBackendNode", "APPLICATION_ID": "RemoteConsolePlus3", "NodeParameters":{"backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream"}}', [20,20])
+        canvas.CreateNodeFromDescriptionAtPosition('{"NodeClass": "SourceBackendNode", "APPLICATION_ID": "RemoteConsolePlus3", "NodeParameters":{"backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream", "backendParameters":{"serverAddress":"tcp://127.0.0.1:55559", "streamsList":["Stream11"]}}}', [20,20])
         canvas.CreateNodeFromDescriptionAtPosition('{"NodeClass": "BackendNode", "APPLICATION_ID": "RemoteConsolePlus3", "NodeParameters":{"backendPath": "MoveMe.Canvas.Objects.MessageProcessingNodes.PassThroughBackendExample"}}', [240,20])
-        canvas.CreateNodeFromDescriptionAtPosition('{"NodeClass": "DestinationBackendNode", "APPLICATION_ID": "RemoteConsolePlus3", "NodeParameters":{"backendPath": "RCP3.Backends.Destinations.Console.SimplePrint"}}', [460,20])
+        canvas.CreateNodeFromDescriptionAtPosition('{"NodeClass": "DestinationBackendNode", "APPLICATION_ID": "RemoteConsolePlus3", "NodeParameters":{"backendPath": "RCP3.Backends.Destinations.HtmlConsole.PyWxHtmlConsole"}}', [460,20])
 
         s.Add(canvas, 1, wx.EXPAND)
         self.SetSizer(s)
