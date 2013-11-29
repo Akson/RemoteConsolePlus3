@@ -1,8 +1,10 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
-from MoveMe.Canvas.Canvas import Canvas
-from MoveMe.Canvas.Factories.DefaultNodesFactory import DefaultNodesFactory
+import wx
 from MoveMe.Canvas.Objects.MessageProcessingNodes.BackendNode import SourceBackendNode,\
     BackendNode, DestinationBackendNode
+from MoveMe.Canvas.Canvas import Canvas
+from MoveMe.Canvas.Factories.DefaultNodesFactory import DefaultNodesFactory
+from RCP3.CommonUIRoutines import ConfirmApplicationExit
 from RCP3.OutputWindowsContainer import OutputWindowsContainer
 
 class RCPCanvas(Canvas):
@@ -18,3 +20,23 @@ class RCPCanvas(Canvas):
     def LoadCanvasFromDict(self, canvasDict):
         OutputWindowsContainer.CreateNewOutputWindowsContainer()
         super(RCPCanvas, self).LoadCanvasFromDict(canvasDict)
+
+
+
+class MessageProcessingGraphWindow(wx.Frame):
+    def __init__(self, *args, **kw):
+        wx.Frame.__init__(self, parent=None, title="RemoteConsole+ message processing graph", size=[800, 600], *args, **kw)
+        OutputWindowsContainer.Instance(self)
+
+        self.canvas = RCPCanvas(self)
+        s = wx.BoxSizer(wx.VERTICAL)
+        s.Add(self.canvas, 1, wx.EXPAND)
+        self.SetSizer(s)
+        
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+
+    def OnClose(self, event):
+        if OutputWindowsContainer.Instance().IsShown():
+            self.Hide()
+        else:
+            ConfirmApplicationExit(self, OutputWindowsContainer.Instance())      
