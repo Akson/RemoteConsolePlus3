@@ -26,11 +26,21 @@ class OutputWindowsContainer(wx.Frame):
     
     def __init__(self, messageProcessingGraphWindow):
         wx.Frame.__init__(self, None, id=wx.ID_ANY, title="RemoteConsole+", size=(800, 600))
+        self.InitializeMenuBar()
         self.messageProcessingGraphWindow = messageProcessingGraphWindow
         self._auiMgr = aui.AuiManager()
         self._auiMgr.SetManagedWindow(self)
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
         
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+
+    def InitializeMenuBar(self):
+        graphMenu = wx.Menu()
+        self.Bind(wx.EVT_MENU, (lambda event: self.messageProcessingGraphWindow.Show()), graphMenu.Append(wx.NewId(), "Show message processing graph"))
+
+        mb = wx.MenuBar()
+        mb.Append(graphMenu, "Graph")
+        self.SetMenuBar(mb)
+
     def AddNewSubWindow(self, subWindow, caption=None, pos=wx.LEFT):
         if len(self._auiMgr.GetAllPanes()) == 0:
             pos=wx.CENTER

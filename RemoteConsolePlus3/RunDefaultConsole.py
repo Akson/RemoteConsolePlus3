@@ -15,5 +15,5 @@ if __name__ == '__main__':
     canvas.ConnectNodes(source, processor)
     canvas.ConnectNodes(processor, destination)
 
-    mpgWindow.Show()
+    #mpgWindow.Show()
     app.MainLoop()
