@@ -9,6 +9,7 @@ from RCP3.OutputWindowsContainer import OutputWindowsContainer
 from RCP3.Configuration import Config
 import json
 import os.path
+import time
 
 class RCPCanvas(Canvas):
     def __init__(self, parent):
@@ -104,3 +105,10 @@ class MessageProcessingGraphWindow(wx.Frame):
             self.Hide()
         else:
             ConfirmApplicationExit(self, OutputWindowsContainer.Instance())      
+            
+    def Destroy(self):
+        #We need to delete all nodes, in order to stop all source nodes threads and connections
+        self.canvas.ClearCanvas()
+        #It's also a good idea to wait for ending of all backend threads
+        time.sleep(Config["Backends"]["Thread stop waiting time (ms)"]/1000.0)
+        wx.Frame.Destroy(self)

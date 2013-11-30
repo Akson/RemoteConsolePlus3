@@ -56,3 +56,4 @@ class OutputWindowsContainer(wx.Frame):
             self.Hide()
         else:
             ConfirmApplicationExit(self.messageProcessingGraphWindow, self)
+
