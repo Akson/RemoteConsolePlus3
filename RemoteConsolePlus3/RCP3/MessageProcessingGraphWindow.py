@@ -71,20 +71,30 @@ class MessageProcessingGraphWindow(wx.Frame):
         self.SetMenuBar(mb)
 
     def OnLoadMessageProcessingGraph(self, evt):
-        """ Open a file"""
-        dlg = wx.FileDialog(self, "Choose a file", '', "", "*.mmj", wx.OPEN)
+        dlg = wx.FileDialog(self, "Choose a file", '', "", "RemoteConsole+ files (*.rcp)|*.rcp", wx.OPEN)
         if dlg.ShowModal() == wx.ID_OK:
-            f = open(os.path.join(dlg.GetDirectory(), dlg.GetFilename()), 'r')
-            self.canvas.LoadCanvasFromDict(json.load(f))
-            f.close()
+            self.LoadFile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
         dlg.Destroy()
+        
     def OnSaveMessageProcessingGraph(self, evt):
-        dlg = wx.FileDialog(self, "Choose a file", '', "", "*.mmj", wx.SAVE)
+        dlg = wx.FileDialog(self, "Choose a file", '', "", "RemoteConsole+ files (*.rcp)|*.rcp", wx.SAVE)
         if dlg.ShowModal() == wx.ID_OK:
-            f = open(os.path.join(dlg.GetDirectory(), dlg.GetFilename()), 'w')
-            f.write(json.dumps(self.canvas.SaveCanvasToDict(), sort_keys=True, indent=4, separators=(',', ': ')))
-            f.close()
+            self.SaveFile(os.path.join(dlg.GetDirectory(), dlg.GetFilename()))
         dlg.Destroy()
+
+    def SaveFile(self, fileName):
+        f = open(fileName, 'w')
+        fileDict = {}
+        fileDict["File format version"] = 1
+        fileDict["RCPCanvas"] = self.canvas.SaveCanvasToDict() 
+        f.write(json.dumps(fileDict, sort_keys=True, indent=4, separators=(',', ': ')))
+        f.close()
+
+    def LoadFile(self, fileName):
+        f = open(fileName, 'r')
+        fileDict = json.load(f)
+        self.canvas.LoadCanvasFromDict(fileDict["RCPCanvas"])
+        f.close()
 
     def OnClose(self, event):
         if OutputWindowsContainer.Instance().IsShown():
