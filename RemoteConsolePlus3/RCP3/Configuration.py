@@ -12,6 +12,8 @@ Config["Application ID"] = "RemoteConsole+ v3"
 Config["UI behavior"] = {}
 Config["UI behavior"]["Ask before exit"] = False
 Config["UI behavior"]["Show message processing graph on start"] = True
+Config["UI behavior"]["Show output windows container on start"] = False
+Config["UI behavior"]["Show output windows container after adding new window"] = False
 
 Config["Backends"] = {}
 Config["Backends"]["Thread stop waiting time (ms)"] = 200

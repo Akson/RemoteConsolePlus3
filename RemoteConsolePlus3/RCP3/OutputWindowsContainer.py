@@ -2,6 +2,7 @@
 import wx
 from wx.lib.agw import aui
 from RCP3.CommonUIRoutines import ConfirmApplicationExit
+from RCP3.Configuration import Config
 
 class OutputWindowsContainer(wx.Frame):
     '''
@@ -47,7 +48,8 @@ class OutputWindowsContainer(wx.Frame):
         self._auiMgr.AddPane(subWindow, pos, caption)
         self._auiMgr.GetPaneByWidget(subWindow).DestroyOnClose(True)
         self._auiMgr.Update()
-        self.Show()
+        if Config["UI behavior"]["Show output windows container after adding new window"]:
+            self.Show()
         
     def OnClose(self, event):
         if self.messageProcessingGraphWindow.IsShown():

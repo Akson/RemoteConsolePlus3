@@ -55,6 +55,9 @@ class MessageProcessingGraphWindow(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         if Config["UI behavior"]["Show message processing graph on start"]:
             self.Show() 
+            
+        if Config["UI behavior"]["Show output windows container on start"]:
+            OutputWindowsContainer.Instance().Show()
         
     def InitializeMenuBar(self):
         mb = wx.MenuBar()
