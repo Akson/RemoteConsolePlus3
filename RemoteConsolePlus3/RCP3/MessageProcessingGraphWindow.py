@@ -8,6 +8,7 @@ from RCP3.CommonUIRoutines import ConfirmApplicationExit
 from RCP3.OutputWindowsContainer import OutputWindowsContainer
 from RCP3.Configuration import Config
 import json
+import os.path
 
 class RCPCanvas(Canvas):
     def __init__(self, parent):
@@ -56,13 +57,34 @@ class MessageProcessingGraphWindow(wx.Frame):
             self.Show() 
         
     def InitializeMenuBar(self):
-        outputWindowsMenu = wx.Menu()
-        self.Bind(wx.EVT_MENU, (lambda event: [OutputWindowsContainer.Instance().Show(), OutputWindowsContainer.Instance().Raise()]), outputWindowsMenu.Append(wx.NewId(), "Show output windows"))
-
         mb = wx.MenuBar()
-        mb.Append(outputWindowsMenu, "Output windows")
+
+        menu = wx.Menu()
+        self.Bind(wx.EVT_MENU, self.OnLoadMessageProcessingGraph, menu.Append(wx.NewId(), "Load message processing graph"))
+        self.Bind(wx.EVT_MENU, self.OnSaveMessageProcessingGraph, menu.Append(wx.NewId(), "Save message processing graph"))
+        mb.Append(menu, "Processing graph")
+
+        menu = wx.Menu()
+        self.Bind(wx.EVT_MENU, (lambda event: [OutputWindowsContainer.Instance().Show(), OutputWindowsContainer.Instance().Raise()]), menu.Append(wx.NewId(), "Show output windows"))
+        mb.Append(menu, "Output windows")
+
         self.SetMenuBar(mb)
 
+    def OnLoadMessageProcessingGraph(self, evt):
+        """ Open a file"""
+        dlg = wx.FileDialog(self, "Choose a file", '', "", "*.mmj", wx.OPEN)
+        if dlg.ShowModal() == wx.ID_OK:
+            f = open(os.path.join(dlg.GetDirectory(), dlg.GetFilename()), 'r')
+            self.canvas.LoadCanvasFromDict(json.load(f))
+            f.close()
+        dlg.Destroy()
+    def OnSaveMessageProcessingGraph(self, evt):
+        dlg = wx.FileDialog(self, "Choose a file", '', "", "*.mmj", wx.SAVE)
+        if dlg.ShowModal() == wx.ID_OK:
+            f = open(os.path.join(dlg.GetDirectory(), dlg.GetFilename()), 'w')
+            f.write(json.dumps(self.canvas.SaveCanvasToDict(), sort_keys=True, indent=4, separators=(',', ': ')))
+            f.close()
+        dlg.Destroy()
 
     def OnClose(self, event):
         if OutputWindowsContainer.Instance().IsShown():
