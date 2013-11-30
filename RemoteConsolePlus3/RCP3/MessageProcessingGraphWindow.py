@@ -11,12 +11,8 @@ import json
 
 class RCPCanvas(Canvas):
     def __init__(self, parent):
-        self.supportedClasses = {
-                   "SourceBackendNode":SourceBackendNode, 
-                   "BackendNode":BackendNode, 
-                   "DestinationBackendNode":DestinationBackendNode 
-                   } 
-        super(RCPCanvas, self).__init__(parent=parent, nodesFactory=DefaultNodesFactory(self.supportedClasses))
+        self.supportedClassesList =[SourceBackendNode, BackendNode, DestinationBackendNode]
+        super(RCPCanvas, self).__init__(parent=parent, nodesFactory=DefaultNodesFactory(self.supportedClassesList))
         self.applicationId = Config["Application ID"]
         
     def LoadCanvasFromDict(self, canvasDict):
@@ -29,19 +25,18 @@ class RCPCanvas(Canvas):
             parentMenu.AppendSubMenu(newElementMenu, "New node")
             
             menuItemId2ClassNameMap = {}
-            for nodeName in self.supportedClasses:
+            for nodeClass in self.supportedClassesList:
                 iid = wx.NewId()
-                menuItemId2ClassNameMap[iid] = nodeName
-                item = wx.MenuItem(newElementMenu, iid, nodeName)
+                menuItemId2ClassNameMap[iid] = nodeClass.__name__
+                item = wx.MenuItem(newElementMenu, iid, "%s (%s)"%(nodeClass.shortHumanFriendlyDescription, nodeClass.__name__))
                 newElementMenu.AppendItem(item)
                 parentMenu.Bind(wx.EVT_MENU, (lambda evt: self.OnNewNode(evt, menuItemId2ClassNameMap)), item)
         
     def OnNewNode(self, event, menuItemId2ClassNameMap):
-        print "Create new", menuItemId2ClassNameMap[event.GetId()], "at", self._mousePositionAtContextMenuCreation
         nodeDescriptionDict = {}
         nodeDescriptionDict["APPLICATION_ID"] = self.applicationId
         nodeDescriptionDict["NodeClass"] = menuItemId2ClassNameMap[event.GetId()]
-        self.CreateNodeFromDescriptionAtPosition(json.dumps(nodeDescriptionDict), self._mousePositionAtContextMenuCreation)
+        self.CreateNodeFromDescriptionAtPosition(nodeDescriptionDict, self._mousePositionAtContextMenuCreation)
         
 
 

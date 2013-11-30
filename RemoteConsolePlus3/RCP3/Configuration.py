@@ -15,3 +15,4 @@ Config["UI behavior"]["Show message processing graph on start"] = True
 
 Config["Backends"] = {}
 Config["Backends"]["Thread stop waiting time (ms)"] = 200
+
