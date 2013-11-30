@@ -2,6 +2,7 @@
 import zmq
 import thread
 import json
+from RCP3.Configuration import Config
 
 class Backend(object):
     def __init__(self, parentNode):
@@ -14,7 +15,7 @@ class Backend(object):
         self._stopListening = False
         self._reconnectToServer = False
 
-        self.threadStopWaitTimeMs = 200
+        self.threadStopWaitTimeMs = Config["Backends"]["Thread stop waiting time (ms)"]
     
     def Delete(self):
         self._stopListening = True

@@ -6,21 +6,43 @@ from MoveMe.Canvas.Canvas import Canvas
 from MoveMe.Canvas.Factories.DefaultNodesFactory import DefaultNodesFactory
 from RCP3.CommonUIRoutines import ConfirmApplicationExit
 from RCP3.OutputWindowsContainer import OutputWindowsContainer
+from RCP3.Configuration import Config
+import json
 
 class RCPCanvas(Canvas):
     def __init__(self, parent):
-        supportedClasses = {
+        self.supportedClasses = {
                    "SourceBackendNode":SourceBackendNode, 
                    "BackendNode":BackendNode, 
                    "DestinationBackendNode":DestinationBackendNode 
                    } 
-        super(RCPCanvas, self).__init__(parent=parent, nodesFactory=DefaultNodesFactory(supportedClasses))
-        self.applicationId = "RemoteConsolePlus3"
+        super(RCPCanvas, self).__init__(parent=parent, nodesFactory=DefaultNodesFactory(self.supportedClasses))
+        self.applicationId = Config["Application ID"]
         
     def LoadCanvasFromDict(self, canvasDict):
         OutputWindowsContainer.CreateNewOutputWindowsContainer()
         super(RCPCanvas, self).LoadCanvasFromDict(canvasDict)
-
+        
+    def AppendContextMenuItems(self, parentMenu):
+        if not self._objectUnderCursor:#We don't want to add a node on top of another node
+            newElementMenu = wx.Menu()
+            parentMenu.AppendSubMenu(newElementMenu, "New node")
+            
+            menuItemId2ClassNameMap = {}
+            for nodeName in self.supportedClasses:
+                iid = wx.NewId()
+                menuItemId2ClassNameMap[iid] = nodeName
+                item = wx.MenuItem(newElementMenu, iid, nodeName)
+                newElementMenu.AppendItem(item)
+                parentMenu.Bind(wx.EVT_MENU, (lambda evt: self.OnNewNode(evt, menuItemId2ClassNameMap)), item)
+        
+    def OnNewNode(self, event, menuItemId2ClassNameMap):
+        print "Create new", menuItemId2ClassNameMap[event.GetId()], "at", self._mousePositionAtContextMenuCreation
+        nodeDescriptionDict = {}
+        nodeDescriptionDict["APPLICATION_ID"] = self.applicationId
+        nodeDescriptionDict["NodeClass"] = menuItemId2ClassNameMap[event.GetId()]
+        self.CreateNodeFromDescriptionAtPosition(json.dumps(nodeDescriptionDict), self._mousePositionAtContextMenuCreation)
+        
 
 
 class MessageProcessingGraphWindow(wx.Frame):
@@ -35,10 +57,12 @@ class MessageProcessingGraphWindow(wx.Frame):
         self.SetSizer(s)
 
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+        if Config["UI behavior"]["Show message processing graph on start"]:
+            self.Show() 
         
     def InitializeMenuBar(self):
         outputWindowsMenu = wx.Menu()
-        self.Bind(wx.EVT_MENU, (lambda event: OutputWindowsContainer.Instance().Show()), outputWindowsMenu.Append(wx.NewId(), "Show output windows"))
+        self.Bind(wx.EVT_MENU, (lambda event: [OutputWindowsContainer.Instance().Show(), OutputWindowsContainer.Instance().Raise()]), outputWindowsMenu.Append(wx.NewId(), "Show output windows"))
 
         mb = wx.MenuBar()
         mb.Append(outputWindowsMenu, "Output windows")

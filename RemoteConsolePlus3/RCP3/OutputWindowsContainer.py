@@ -35,7 +35,7 @@ class OutputWindowsContainer(wx.Frame):
 
     def InitializeMenuBar(self):
         graphMenu = wx.Menu()
-        self.Bind(wx.EVT_MENU, (lambda event: self.messageProcessingGraphWindow.Show()), graphMenu.Append(wx.NewId(), "Show message processing graph"))
+        self.Bind(wx.EVT_MENU, (lambda event: [self.messageProcessingGraphWindow.Show(), self.messageProcessingGraphWindow.Raise()]), graphMenu.Append(wx.NewId(), "Show message processing graph"))
 
         mb = wx.MenuBar()
         mb.Append(graphMenu, "Graph")
