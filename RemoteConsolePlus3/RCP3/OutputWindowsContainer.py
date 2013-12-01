@@ -57,3 +57,6 @@ class OutputWindowsContainer(wx.Frame):
         else:
             ConfirmApplicationExit(self.messageProcessingGraphWindow, self)
 
+    def Show(self, show=True):
+        wx.Frame.Show(self, show)
+        self.Raise()
