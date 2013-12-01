@@ -37,7 +37,7 @@ class HTMLConsole(wx.Panel):
         self.Bind(wx.EVT_TIMER, self.CheckIfNeedUpdate, self._mainTimer)
 
         self._messagesListLock = Lock()
-
+        
     def BuildToolbar( self ) :
         tb = aui.AuiToolBar( self, -1 )
         self.ToolBar = tb
@@ -100,11 +100,24 @@ class HTMLConsole(wx.Panel):
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
-        self._htmlConsole = HTMLConsole(OutputWindowsContainer.Instance())
-        OutputWindowsContainer.Instance().AddNewSubWindow(self._htmlConsole)
-    
+        self._htmlConsole = None
+        self.ShowWindow()
+
+    def ShowWindow(self):
+        if self._htmlConsole == None:
+            self._htmlConsole = HTMLConsole(OutputWindowsContainer.Instance())
+            OutputWindowsContainer.Instance().AddNewSubWindow(self._htmlConsole)
+            self._htmlConsole.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyOutputWindow)
+        else:
+            OutputWindowsContainer.Instance().Show()
+
+    def OnDestroyOutputWindow(self, event):
+        self._htmlConsole = None
+
     def AppendContextMenuItems(self, menu):
-        pass
+        item = wx.MenuItem(menu, wx.NewId(), "Show output window")
+        menu.Bind(wx.EVT_MENU, (lambda evt: self.ShowWindow()), item)
+        menu.AppendItem(item)
 
     def GetParameters(self):
         """
@@ -127,10 +140,12 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
-        self._htmlConsole.AddHtmlLine(str(message))
+        if self._htmlConsole:
+            self._htmlConsole.AddHtmlLine(str(message))
 
     def Delete(self):
         """
         This method is called when a parent node is deleted.
         """
-        pass
+        if self._htmlConsole:
+            self._htmlConsole.Close()
