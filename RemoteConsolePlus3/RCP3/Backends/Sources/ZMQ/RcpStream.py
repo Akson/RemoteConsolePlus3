@@ -17,6 +17,9 @@ class Backend(object):
 
         self.threadStopWaitTimeMs = Config["Backends"]["Thread stop waiting time (ms)"]
     
+    def AppendContextMenuItems(self, menu):
+        pass
+
     def Delete(self):
         self._stopListening = True
     

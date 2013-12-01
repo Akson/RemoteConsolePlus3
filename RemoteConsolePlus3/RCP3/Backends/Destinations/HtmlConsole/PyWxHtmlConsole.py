@@ -103,6 +103,9 @@ class Backend(object):
         self._htmlConsole = HTMLConsole(OutputWindowsContainer.Instance())
         OutputWindowsContainer.Instance().AddNewSubWindow(self._htmlConsole)
     
+    def AppendContextMenuItems(self, menu):
+        pass
+
     def GetParameters(self):
         """
         Returns a dictionary with object parameters, their values, 
