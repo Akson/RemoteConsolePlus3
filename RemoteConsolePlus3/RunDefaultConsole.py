@@ -1,4 +1,7 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
+
+import sys
+sys.path.append('..\MoveMe')#MoveMe should live near RCP
 import wx
 import logging
 from RCP3.MessageProcessingGraphWindow import MessageProcessingGraphWindow

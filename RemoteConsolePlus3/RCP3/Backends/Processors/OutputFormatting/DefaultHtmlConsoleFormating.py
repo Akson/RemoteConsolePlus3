@@ -32,14 +32,25 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
+
+        processedMessage = dict(message)
         
-        streamsStack=message["Stream"].split("/")
+        if not "TimeStampMsSince1970" in processedMessage["Info"]:
+            processedMessage["Info"]["TimeStampMsSince1970"] = int(time.time()*1000)
+        
+        if not "ApplicationName" in processedMessage["Info"]:
+            processedMessage["Info"]["ApplicationName"] = "NO_APP_NAME"
+        
+        streamsStack=processedMessage["Stream"].split("/")
 
         headerParameters = {}
-        headerParameters["formatedTimeHMS"]=time.strftime('%H.%M.%S', time.localtime(message["Info"]["TimeStampMsSince1970"]/1000.0))
-        headerParameters["timeMs"]="%03d"%(message["Info"]["TimeStampMsSince1970"]%1000)
+        headerParameters["formatedTimeHMS"]=time.strftime('%H.%M.%S', time.localtime(processedMessage["Info"]["TimeStampMsSince1970"]/1000.0))
+        headerParameters["timeMs"]="%03d"%(processedMessage["Info"]["TimeStampMsSince1970"]%1000)
 
-        headerParameters["ApplicationName"]=message["Info"]["ApplicationName"][:-4]
+        nameComponentsList = processedMessage["Info"]["ApplicationName"].split(".")
+        if len(nameComponentsList)>1:
+            nameComponentsList = nameComponentsList[:-1]
+        headerParameters["ApplicationName"]=".".join(nameComponentsList)
 
         if streamsStack[0] == "Vars":
             headerParameters["VariableName"] = "/".join(streamsStack[1:])
@@ -47,9 +58,7 @@ class Backend(object):
         else:
             header = "<a href=\"http://www.w3schools.com\">{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: ".format(**headerParameters)
         
-        #Make a copy of an input message and update appropriate fields
-        processedMessage = dict(message)
-        processedMessage["Data"] = header + message["Data"]
+        processedMessage["Data"] = header + processedMessage["Data"]
 
         self._parentNode.SendMessage(processedMessage)
         
