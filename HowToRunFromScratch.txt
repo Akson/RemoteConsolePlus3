@@ -1,0 +1,32 @@
+WINDOWS:
+Steps 1-6 is a common development envrionment, it is possible to skip some of them.
+
+1) Install git from here: http://git-scm.com/downloads
+1.1) Add git to system search path (select appropriate radio button during installation)
+
+2) Install Python 2.7.6 32bit from here: http://www.python.org/getit/
+
+3) Install setuptools 1.4.2 from here: https://pypi.python.org/pypi/setuptools
+3.1) Go to Windows section for description here:
+3.2) Download "ez_setup.py" from https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+3.3) Run "ez_setup.py"
+
+4) Install PyZmq 14.0.1 using easy_install
+4.1) Run "easy_install pyzmq" from "C:\Python27\Scripts\" or your Python location
+
+5) Install WxPython 2.8 32bit unicode from http://www.wxpython.org/download.php
+5.1) Download and run "wxPython2.8-win32-unicode-py27" from http://downloads.sourceforge.net/wxpython/wxPython2.8-win32-unicode-2.8.12.1-py27.exe
+
+6) Install NumPy 1.8.0
+6.1) Download and run "numpy-1.8.0-win32-superpack-python2.7" from: http://sourceforge.net/projects/numpy/files/NumPy/1.8.0/numpy-1.8.0-win32-superpack-python2.7.exe/download
+
+7) Get source code from GitHub (repository lives here: https://github.com/Akson/RemoteConsolePlus3)
+7.1) Go to folder where project will live (git will create a "RemoteConsolePlus3" subfolder)
+7.2) Run "git clone https://github.com/Akson/RemoteConsolePlus3"
+7.3) Run "cd RemoteConsolePlus3"
+7.4) Run "git submodule init"
+7.5) Run "git submodule update"
+
+RUNING:
+1) Run console: "RemoteConsolePlus3\RemoteConsolePlus3\RunDefaultConsole.py"
+2) Run test client: "RemoteConsolePlus3\RemoteConsolePlus3\RunTestClient.py"
