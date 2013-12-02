@@ -142,7 +142,7 @@ class Backend(object):
         should be called with an appropriate message.
         """
         if self._htmlConsole:
-            self._htmlConsole.AddHtmlLine(str(message))
+            self._htmlConsole.AddHtmlLine(str(message["Data"]))
 
     def Delete(self):
         """

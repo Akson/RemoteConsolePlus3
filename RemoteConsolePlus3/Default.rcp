@@ -1,0 +1,58 @@
+{
+    "File format version": 1,
+    "RCPCanvas": {
+        "Connections": [
+            {
+                "destinationIdx": 1,
+                "sourceIdx": 0
+            },
+            {
+                "destinationIdx": 2,
+                "sourceIdx": 1
+            }
+        ],
+        "Nodes": [
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            ""
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        20,
+                        20
+                    ],
+                    "text": "SourceBackendNode"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.OutputFormatting.DefaultHtmlConsoleFormating",
+                    "position": [
+                        240,
+                        20
+                    ],
+                    "text": "BackendNode"
+                }
+            },
+            {
+                "NodeClass": "DestinationBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Destinations.HtmlConsole.PyWxHtmlConsole",
+                    "position": [
+                        460,
+                        20
+                    ],
+                    "text": "DestinationBackendNode"
+                }
+            }
+        ]
+    }
+}
