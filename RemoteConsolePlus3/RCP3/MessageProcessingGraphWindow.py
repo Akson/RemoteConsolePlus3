@@ -44,7 +44,13 @@ class RCPCanvas(Canvas):
 
 class MessageProcessingGraphWindow(wx.Frame):
     def __init__(self, *args, **kw):
-        wx.Frame.__init__(self, parent=None, title="RemoteConsole+ message processing graph", size=[800, 600], *args, **kw)
+        wx.Frame.__init__(self, 
+                          parent=None, 
+                          title="RemoteConsole+ message processing graph", 
+                          size=Config["UI behavior"]["Message processing graph window"]["Window size"],
+                          pos=Config["UI behavior"]["Message processing graph window"]["Window position"], 
+                          *args, 
+                          **kw)
         OutputWindowsContainer.Instance(self)
         self.InitializeMenuBar()
 
@@ -54,12 +60,23 @@ class MessageProcessingGraphWindow(wx.Frame):
         self.SetSizer(s)
 
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        if Config["UI behavior"]["Show message processing graph on start"]:
+        if Config["UI behavior"]["Message processing graph window"]["Show on start"]:
             self.Show() 
             
-        if Config["UI behavior"]["Show output windows container on start"]:
+        if Config["UI behavior"]["Output windows container"]["Show on start"]:
             OutputWindowsContainer.Instance().Show()
+            
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_MOVE, self.OnMove)
         
+    def OnMove(self, event):
+        Config["UI behavior"]["Message processing graph window"]["Window position"] = [self.GetPosition()[0], self.GetPosition()[1]]
+        event.Skip()
+
+    def OnSize(self, event):
+        Config["UI behavior"]["Message processing graph window"]["Window size"] = [self.GetSize()[0], self.GetSize()[1]]
+        event.Skip()
+                    
     def InitializeMenuBar(self):
         mb = wx.MenuBar()
 

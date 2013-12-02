@@ -1,0 +1,32 @@
+{
+    "Application ID": "RemoteConsole+ v3",
+    "Backends": {
+        "Thread stop waiting time (ms)": 200
+    },
+    "UI behavior": {
+        "Ask before exit": false,
+        "Message processing graph window": {
+            "Show on start": true,
+            "Window position": [
+                1440,
+                472
+            ],
+            "Window size": [
+                960,
+                1080
+            ]
+        },
+        "Output windows container": {
+            "Show after adding new window": false,
+            "Show on start": true,
+            "Window position": [
+                2400,
+                472
+            ],
+            "Window size": [
+                960,
+                1080
+            ]
+        }
+    }
+}

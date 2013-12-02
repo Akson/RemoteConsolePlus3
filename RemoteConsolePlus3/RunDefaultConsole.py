@@ -2,6 +2,7 @@
 import wx
 import logging
 from RCP3.MessageProcessingGraphWindow import MessageProcessingGraphWindow
+import RCP3.Configuration
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
@@ -17,3 +18,4 @@ if __name__ == '__main__':
     canvas.ConnectNodes(processor, destination)
 
     app.MainLoop()
+    RCP3.Configuration.SaveConfiguration()

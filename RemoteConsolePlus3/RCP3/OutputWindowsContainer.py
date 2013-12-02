@@ -26,13 +26,29 @@ class OutputWindowsContainer(wx.Frame):
     
     
     def __init__(self, messageProcessingGraphWindow):
-        wx.Frame.__init__(self, None, id=wx.ID_ANY, title="RemoteConsole+", size=(800, 600))
+        wx.Frame.__init__(self, 
+                          None, 
+                          id=wx.ID_ANY, 
+                          title="RemoteConsole+ output windows", 
+                          size=Config["UI behavior"]["Output windows container"]["Window size"],
+                          pos=Config["UI behavior"]["Output windows container"]["Window position"])                          
         self.InitializeMenuBar()
         self.messageProcessingGraphWindow = messageProcessingGraphWindow
         self._auiMgr = aui.AuiManager()
         self._auiMgr.SetManagedWindow(self)
         
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+
+        self.Bind(wx.EVT_SIZE, self.OnSize)
+        self.Bind(wx.EVT_MOVE, self.OnMove)
+        
+    def OnMove(self, event):
+        Config["UI behavior"]["Output windows container"]["Window position"] = [self.GetPosition()[0], self.GetPosition()[1]]
+        event.Skip()
+                
+    def OnSize(self, event):
+        Config["UI behavior"]["Output windows container"]["Window size"] = [self.GetSize()[0], self.GetSize()[1]]
+        event.Skip()
 
     def InitializeMenuBar(self):
         graphMenu = wx.Menu()
@@ -48,7 +64,7 @@ class OutputWindowsContainer(wx.Frame):
         self._auiMgr.AddPane(subWindow, pos, caption)
         self._auiMgr.GetPaneByWidget(subWindow).DestroyOnClose(True)
         self._auiMgr.Update()
-        if Config["UI behavior"]["Show output windows container after adding new window"]:
+        if Config["UI behavior"]["Output windows container"]["Show after adding new window"]:
             self.Show()
         
     def OnClose(self, event):
