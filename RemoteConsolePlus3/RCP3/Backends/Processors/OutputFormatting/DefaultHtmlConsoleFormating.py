@@ -43,9 +43,9 @@ class Backend(object):
 
         if streamsStack[0] == "Vars":
             headerParameters["VariableName"] = "/".join(streamsStack[1:])
-            header = "{ApplicationName}:{formatedTimeHMS}.{timeMs}: <i>{VariableName}</i> = ".format(**headerParameters)
+            header = "<a href=\"http://www.w3schools.com\">{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: <i>{VariableName}</i> = ".format(**headerParameters)
         else:
-            header = "{ApplicationName}:{formatedTimeHMS}.{timeMs}: ".format(**headerParameters)
+            header = "<a href=\"http://www.w3schools.com\">{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: ".format(**headerParameters)
         
         #Make a copy of an input message and update appropriate fields
         processedMessage = dict(message)
