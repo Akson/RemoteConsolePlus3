@@ -5,13 +5,14 @@ import json
 from RCP3.Configuration import Config
 import wx
 from RCP3.Backends.Sources.ZMQ.Tools.UI import ServerSelectionDialog
+import logging
 
 
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
         
-        self._streamsList = None
+        self._streamsList = []
         self._serverAddress = None
 
         self._listeningThreadRunning = False
@@ -34,8 +35,7 @@ class Backend(object):
         serverSelectionDialog = ServerSelectionDialog(self._serverAddress)
         serverSelectionDialog.ShowModal()
         serverSelectionDialog.Destroy()
-        self._serverAddress = serverSelectionDialog.serverAddress
-        print self._serverAddress
+        self.SetParameters({"serverAddress":serverSelectionDialog.serverAddress})
     
     def OnSelectStreams(self, evt):
         pass
@@ -47,10 +47,10 @@ class Backend(object):
         return {"streamsList":self._streamsList, "serverAddress":self._serverAddress}
     
     def SetParameters(self, parameters):
-        self._streamsList = parameters.get("streamsList", [])
-        self._serverAddress = parameters.get("serverAddress", None)
+        self._streamsList = parameters.get("streamsList", self._streamsList)
+        self._serverAddress = parameters.get("serverAddress", self._serverAddress)
         
-        if self._serverAddress:
+        if self._serverAddress!=None and len(self._streamsList)>0:
             self._reconnectToServer = True
             if not self._listeningThreadRunning:
                 thread.start_new_thread(self.StreamListenerThreadFunc, ())
@@ -58,14 +58,21 @@ class Backend(object):
         
         
     def StreamListenerThreadFunc(self):
+        self._listeningThreadRunning = True
+        
         while not self._stopListening:
             #Reconnect to server if needed
             if self._reconnectToServer:
-                socket = zmq.Context.instance().socket(zmq.SUB)
-                socket.connect(self._serverAddress)
-                for streamName in self._streamsList:
-                    socket.setsockopt(zmq.SUBSCRIBE, str(streamName))
-                self._reconnectToServer = False
+                try:
+                    socket = zmq.Context.instance().socket(zmq.SUB)
+                    socket.connect(self._serverAddress)
+                    for streamName in self._streamsList:
+                        socket.setsockopt(zmq.SUBSCRIBE, str(streamName))
+                    self._reconnectToServer = False
+                except zmq.ZMQError, e:
+                    logging.error("ZMQ cannot connect to the specified router address: "+self._serverAddress)
+                    #If we cannot connect, just stop this thread
+                    break
 
             #Wait for incoming messages 
             if socket.poll(self.threadStopWaitTimeMs) and not self._stopListening:
@@ -74,6 +81,8 @@ class Backend(object):
                 except zmq.ZMQError, e:
                     print e
                 self.ProcessIncomingZmqMessage(zmqMessage)
+        
+        self._listeningThreadRunning = False
 
     def ProcessIncomingZmqMessage(self, zmqMessage):
         """
