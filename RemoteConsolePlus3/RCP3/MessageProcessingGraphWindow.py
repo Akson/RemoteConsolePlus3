@@ -10,6 +10,8 @@ from RCP3.Configuration import Config
 import json
 import os.path
 import time
+import logging
+import traceback
 
 class RCPCanvas(Canvas):
     def __init__(self, parent):
@@ -104,18 +106,26 @@ class MessageProcessingGraphWindow(wx.Frame):
         dlg.Destroy()
 
     def SaveFile(self, fileName):
-        f = open(fileName, 'w')
-        fileDict = {}
-        fileDict["File format version"] = 1
-        fileDict["RCPCanvas"] = self.canvas.SaveCanvasToDict() 
-        f.write(json.dumps(fileDict, sort_keys=True, indent=4, separators=(',', ': ')))
-        f.close()
+        try:
+            f = open(fileName, 'w')
+            fileDict = {}
+            fileDict["File format version"] = 1
+            fileDict["RCPCanvas"] = self.canvas.SaveCanvasToDict() 
+            f.write(json.dumps(fileDict, sort_keys=True, indent=4, separators=(',', ': ')))
+            f.close()
+        except:
+            logging.error("Cannot save console to file: "+fileName)
+            logging.debug(traceback.format_exc())
 
     def LoadFile(self, fileName):
-        f = open(fileName, 'r')
-        fileDict = json.load(f)
-        self.canvas.LoadCanvasFromDict(fileDict["RCPCanvas"])
-        f.close()
+        try:
+            f = open(fileName, 'r')
+            fileDict = json.load(f)
+            self.canvas.LoadCanvasFromDict(fileDict["RCPCanvas"])
+            f.close()
+        except:
+            logging.error("Cannot load console from file: "+fileName)
+            logging.debug(traceback.format_exc())
 
     def OnClose(self, event):
         if OutputWindowsContainer.Instance().IsShown():
