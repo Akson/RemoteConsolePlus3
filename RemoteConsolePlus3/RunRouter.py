@@ -2,5 +2,4 @@
 from RCP3.Infrastructure.Router import Router
 
 if __name__ == '__main__':
-    router = Router("tcp://*:55557", "tcp://*:55559")
-    router.Run();
+    Router("tcp://*:55557", "tcp://*:55559").Run()
