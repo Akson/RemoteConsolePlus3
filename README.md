@@ -12,3 +12,5 @@ Dependencies:<br>
 It was tested on Windows 7(x64) with these dependencies.<br>
 It was also tested on 8(x64), 8.1(x64) with similar dependecnies.<br>
 It will probably work with newer libraries.<br>
+<br>
+Read about how to run it from scratch <a href="https://raw.github.com/Akson/RemoteConsolePlus3/master/HowToRunFromScratch.txt">here</a>
