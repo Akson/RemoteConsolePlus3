@@ -37,6 +37,7 @@ class HTMLConsole(wx.Panel):
         self.Bind(wx.EVT_TIMER, self.CheckIfNeedUpdate, self._mainTimer)
 
         self._messagesListLock = Lock()
+        self.SetSize((250, 200))
         
     def BuildToolbar( self ) :
         tb = aui.AuiToolBar( self, -1 )

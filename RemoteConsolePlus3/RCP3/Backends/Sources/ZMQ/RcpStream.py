@@ -4,6 +4,8 @@ import thread
 import json
 from RCP3.Configuration import Config
 import wx
+from RCP3.Backends.Sources.ZMQ.Tools.UI import ServerSelectionDialog
+
 
 class Backend(object):
     def __init__(self, parentNode):
@@ -19,7 +21,7 @@ class Backend(object):
         self.threadStopWaitTimeMs = Config["Backends"]["Thread stop waiting time (ms)"]
     
     def AppendContextMenuItems(self, menu):
-        item = wx.MenuItem(menu, wx.NewId(), "Select server")
+        item = wx.MenuItem(menu, wx.NewId(), "Select router address")
         menu.Bind(wx.EVT_MENU, self.OnSelectServer, item)
         menu.AppendItem(item)
         
@@ -29,7 +31,11 @@ class Backend(object):
             menu.AppendItem(item)
         
     def OnSelectServer(self, evt):
-        pass
+        serverSelectionDialog = ServerSelectionDialog(self._serverAddress)
+        serverSelectionDialog.ShowModal()
+        serverSelectionDialog.Destroy()
+        self._serverAddress = serverSelectionDialog.serverAddress
+        print self._serverAddress
     
     def OnSelectStreams(self, evt):
         pass
