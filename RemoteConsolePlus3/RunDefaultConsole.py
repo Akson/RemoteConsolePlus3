@@ -16,6 +16,8 @@ if __name__ == '__main__':
     destination = canvas.CreateNodeFromDescriptionAtPosition('{"NodeClass": "DestinationBackendNode", "APPLICATION_ID": "RemoteConsole+ v3", "NodeParameters":{"backendPath": "RCP3.Backends.Destinations.HtmlConsole.PyWxHtmlConsole"}}', [460,20])
     canvas.ConnectNodes(source, processor)
     canvas.ConnectNodes(processor, destination)
+    
+    mpgWindow.LoadFile("Default.rcp")
 
     app.MainLoop()
     RCP3.Configuration.SaveConfiguration()

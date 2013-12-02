@@ -33,15 +33,24 @@ class Backend(object):
         should be called with an appropriate message.
         """
         
-        processedMessage = dict(message)
-        #print message["Info"]
-        
+        streamsStack=message["Stream"].split("/")
+
         headerParameters = {}
         headerParameters["formatedTimeHMS"]=time.strftime('%H.%M.%S', time.localtime(message["Info"]["TimeStampMsSince1970"]/1000.0))
-        headerParameters["timeMs"]=message["Info"]["TimeStampMsSince1970"]%1000
-        header = "{formatedTimeHMS}.{timeMs}: ".format(**headerParameters)
+        headerParameters["timeMs"]="%03d"%(message["Info"]["TimeStampMsSince1970"]%1000)
+
+        headerParameters["ApplicationName"]=message["Info"]["ApplicationName"][:-4]
+
+        if streamsStack[0] == "Vars":
+            headerParameters["VariableName"] = "/".join(streamsStack[1:])
+            header = "{ApplicationName}:{formatedTimeHMS}.{timeMs}: <i>{VariableName}</i> = ".format(**headerParameters)
+        else:
+            header = "{ApplicationName}:{formatedTimeHMS}.{timeMs}: ".format(**headerParameters)
         
-        processedMessage["Data"] = header + message["Data"]  
+        #Make a copy of an input message and update appropriate fields
+        processedMessage = dict(message)
+        processedMessage["Data"] = header + message["Data"]
+
         self._parentNode.SendMessage(processedMessage)
         
     def AppendContextMenuItems(self, menu):
