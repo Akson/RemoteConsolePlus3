@@ -22,4 +22,5 @@ class Router(object):
         self._outputSocket.bind(self._outputAddress)
 
     def Run(self):
+        print "Running router: "+self._inputAddress+" -> "+self._outputAddress
         zmq.proxy(self._inputSocket, self._outputSocket, None)
