@@ -4,7 +4,7 @@ from RCP3.Backends.Sources.ZMQ.Tools.RoutersListProvider import GetAvailableRout
 
 class ServerSelectionDialog(wx.Dialog):
     def __init__(self, currentServerAddress = None):
-        super(ServerSelectionDialog, self).__init__(parent=None, size=(450, 250)) 
+        super(ServerSelectionDialog, self).__init__(parent=None, size=(270, 260)) 
         self._originalServerAddress = currentServerAddress
         self.serverAddress = currentServerAddress
         
@@ -25,7 +25,7 @@ class ServerSelectionDialog(wx.Dialog):
         vbox.Add(hbox, flag=wx.ALL|wx.EXPAND, border=5)
 
         hbox = wx.BoxSizer(wx.HORIZONTAL)
-        self.listBox = wx.ListBox(self, wx.NewId(), wx.DefaultPosition, (-1, 140), self.availableServersList, wx.LB_SINGLE)
+        self.listBox = wx.ListBox(self, wx.NewId(), wx.DefaultPosition, (-1, 150), self.availableServersList, wx.LB_SINGLE)
         hbox.Add(self.listBox, proportion=1, flag=wx.EXPAND)
         vbox.Add(hbox, flag=wx.ALL|wx.EXPAND, border=5)
        
