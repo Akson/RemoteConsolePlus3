@@ -63,11 +63,14 @@ class Backend(object):
         processedMessage["Stream"] = message["Stream"] 
         processedMessage["Info"] = message["Info"]
         
-        #Parse data base on format. String is a default format
+        #Parse data based on format. String is a default format
         dataType = message["Info"].get("DataType", "String")
 
         if dataType == "String":
             processedMessage["Data"] = message["Data"]
+
+        if dataType == "JSON":
+            processedMessage["Data"] = json.loads(message["Data"])["Value"]
         
         if dataType == "Binary":
             if not "BinaryDataFormat" in message["Info"]:
@@ -81,25 +84,6 @@ class Backend(object):
                 dimensions = self.ParseDimensionsString(message["Info"]["Dimensions"])
             processedMessage["Data"] = self.ParseBinaryData(binaryData, binaryDataFormat, dimensions)
 
-        if dataType == "JSON":
-            processedMessage["Data"] = json.loads(message["Data"])
-        
-            
-        """
-        print "np", 
-
-        resultList = []      
-        for i in range(elementsNumber):
-            resultList.append(struct.unpack_from(binaryDataFormat, binaryData, i*elementSize)[0])   
-        
-        print "list", resultList
-        
-        return resultList
-        """
-
-
-
-        
         self._parentNode.SendMessage(processedMessage)
         
     def AppendContextMenuItems(self, menu):

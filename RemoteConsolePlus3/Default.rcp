@@ -15,12 +15,16 @@
                 "sourceIdx": 3
             },
             {
-                "destinationIdx": 2,
+                "destinationIdx": 6,
                 "sourceIdx": 4
             },
             {
                 "destinationIdx": 1,
                 "sourceIdx": 5
+            },
+            {
+                "destinationIdx": 1,
+                "sourceIdx": 6
             }
         ],
         "Nodes": [
@@ -47,8 +51,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.OutputFormatting.DefaultHtmlConsoleFormating",
                     "position": [
-                        23,
-                        163
+                        128,
+                        255
                     ],
                     "text": "DefaultHtmlConsoleFormating"
                 }
@@ -59,8 +63,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Destinations.HtmlConsole.PyWxHtmlConsole",
                     "position": [
-                        199,
-                        309
+                        126,
+                        326
                     ],
                     "text": "PyWxHtmlConsole"
                 }
@@ -88,8 +92,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
                     "position": [
-                        206,
-                        96
+                        207,
+                        92
                     ],
                     "text": "DefaultParser"
                 }
@@ -104,6 +108,18 @@
                         93
                     ],
                     "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.OutputFormatting.Matrix2Table",
+                    "position": [
+                        211,
+                        157
+                    ],
+                    "text": "Matrix2Table"
                 }
             }
         ]

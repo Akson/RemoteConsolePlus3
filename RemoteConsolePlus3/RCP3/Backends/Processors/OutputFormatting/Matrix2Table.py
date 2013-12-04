@@ -1,6 +1,4 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
-import logging
-
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
@@ -33,6 +31,23 @@ class Backend(object):
         should be called with an appropriate message.
         """
         processedMessage = dict(message)
+        
+        if len(message["Data"].shape) == 2:
+            html = '<table border="1">'
+            
+            for i in range(message["Data"].shape[0]):
+                html += '<tr>'
+
+                for j in range(message["Data"].shape[1]):
+                    html += '<td>'
+                    html += str(message["Data"][i,j])
+                    html += '</td>'
+                
+                html += '</tr>'
+           
+            html += '</table>'
+            
+            processedMessage["Data"] = html
         
         self._parentNode.SendMessage(processedMessage)
         
