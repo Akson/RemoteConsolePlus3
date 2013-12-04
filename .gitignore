@@ -33,3 +33,4 @@ nosetests.xml
 # Mr Developer
 .mr.developer.cfg
 .metadata
+RemoteConsolePlus3/RCP3Config.json
