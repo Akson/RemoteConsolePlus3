@@ -39,14 +39,16 @@ class Backend(object):
         if stream.find("MatrixPrinter") == 0:
             components = stream.split("/")
             
-            if len(components)==2:
+            if len(components)>1:
                 formatDescriptionString = components[-1]
-                #find the last digit and split stream name around it
-                reResult = re.search("\d", formatDescriptionString[::-1])
-                p = len(formatDescriptionString) - reResult.start() 
-                
-                processedMessage["Info"]["Dimensions"] = formatDescriptionString[:p] 
-                processedMessage["Info"]["BinaryDataFormat"] = formatDescriptionString[p:] 
+                if formatDescriptionString[0] == "#":
+                    formatDescriptionString = formatDescriptionString[1:]
+                    #find the last digit and split stream name around it
+                    reResult = re.search("\d", formatDescriptionString[::-1])
+                    p = len(formatDescriptionString) - reResult.start() 
+                    
+                    processedMessage["Info"]["Dimensions"] = formatDescriptionString[:p] 
+                    processedMessage["Info"]["BinaryDataFormat"] = formatDescriptionString[p:] 
         
         self._parentNode.SendMessage(processedMessage)
         
