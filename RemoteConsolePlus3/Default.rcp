@@ -9,6 +9,10 @@
             {
                 "destinationIdx": 2,
                 "sourceIdx": 1
+            },
+            {
+                "destinationIdx": 2,
+                "sourceIdx": 3
             }
         ],
         "Nodes": [
@@ -18,7 +22,7 @@
                     "backendParameters": {
                         "serverAddress": "tcp://localhost:55559",
                         "streamsList": [
-                            ""
+                            "TextHtml"
                         ]
                     },
                     "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
@@ -51,6 +55,23 @@
                         20
                     ],
                     "text": "DestinationBackendNode"
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "MatrixPrinter"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        22,
+                        122
+                    ],
+                    "text": "SourceBackendNode"
                 }
             }
         ]

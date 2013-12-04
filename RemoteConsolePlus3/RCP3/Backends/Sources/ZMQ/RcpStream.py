@@ -4,7 +4,8 @@ import thread
 import json
 from RCP3.Configuration import Config
 import wx
-from RCP3.Backends.Sources.ZMQ.Tools.UI import ServerSelectionDialog
+from RCP3.Backends.Sources.ZMQ.Tools.UI import ServerSelectionDialog,\
+    StreamsSelectionDialog
 import logging
 
 
@@ -38,7 +39,10 @@ class Backend(object):
         self.SetParameters({"serverAddress":serverSelectionDialog.serverAddress})
     
     def OnSelectStreams(self, evt):
-        pass
+        streamsSelectionDialog = StreamsSelectionDialog(self._serverAddress, self._streamsList)
+        streamsSelectionDialog.ShowModal()
+        streamsSelectionDialog.Destroy()
+        self.SetParameters({"streamsList":streamsSelectionDialog.streamsList})
 
     def Delete(self):
         self._stopListening = True

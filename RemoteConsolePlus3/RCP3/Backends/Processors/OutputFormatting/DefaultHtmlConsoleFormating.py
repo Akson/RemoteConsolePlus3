@@ -58,7 +58,7 @@ class Backend(object):
         else:
             header = "<a href=\"http://www.w3schools.com\">{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: ".format(**headerParameters)
         
-        processedMessage["Data"] = header + processedMessage["Data"]
+        processedMessage["Data"] = header + processedMessage["Stream"] + ": " + processedMessage["Data"]
 
         self._parentNode.SendMessage(processedMessage)
         

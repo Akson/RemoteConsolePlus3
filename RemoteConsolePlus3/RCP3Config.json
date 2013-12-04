@@ -8,8 +8,8 @@
         "Message processing graph window": {
             "Show on start": true,
             "Window position": [
-                960,
-                45
+                1440,
+                474
             ],
             "Window size": [
                 960,
@@ -20,12 +20,12 @@
             "Show after adding new window": false,
             "Show on start": true,
             "Window position": [
-                960,
-                550
+                2400,
+                472
             ],
             "Window size": [
                 960,
-                490
+                1080
             ]
         }
     }

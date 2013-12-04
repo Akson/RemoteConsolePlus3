@@ -69,3 +69,67 @@ class ServerSelectionDialog(wx.Dialog):
     def RestoreOriginalAndClose(self, e):
         self.serverAddress = self._originalServerAddress
         self.Destroy()
+
+class StreamsSelectionDialog(wx.Dialog):
+    def __init__(self, currentServerAddress, currentStreams = []):
+        super(StreamsSelectionDialog, self).__init__(parent=None, size=(670, 360)) 
+        self.serverAddress = currentServerAddress
+        self._originalStreams = currentStreams
+        self.streamsList = currentStreams
+        self.currentlySelectedIdx = -1
+        
+        self.InitUI()
+        self.SetTitle("Select listening streams for "+self.serverAddress)
+        
+    def InitUI(self):
+        vbox = wx.BoxSizer(wx.VERTICAL)
+
+        hbox = wx.BoxSizer(wx.HORIZONTAL)        
+        hbox.Add(wx.StaticText(self, label='Stream name:'), flag=wx.ALIGN_CENTER_VERTICAL)
+        self.addressTextCtrl = wx.TextCtrl(self)
+        self.addressTextCtrl.SetValue("")
+        hbox.Add(self.addressTextCtrl, proportion=1, flag=wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.EXPAND, border=5)
+        addButton = wx.Button(self, label='Add')
+        hbox.Add(addButton, flag=wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.EXPAND, border=5)
+        vbox.Add(hbox, flag=wx.ALL|wx.EXPAND, border=5)
+
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+        self.listBox = wx.ListBox(self, wx.NewId(), wx.DefaultPosition, (-1, 250), self.streamsList, wx.LB_SINGLE)
+        hbox.Add(self.listBox, proportion=1, flag=wx.EXPAND)
+        vbox.Add(hbox, flag=wx.ALL|wx.EXPAND, border=5)
+       
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+        okButton = wx.Button(self, label='Ok')
+        closeButton = wx.Button(self, label='Close')
+        hbox.Add(okButton)
+        hbox.Add(closeButton, flag=wx.LEFT, border=5)
+        vbox.Add(hbox, flag=wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, border=5)
+
+        self.SetSizer(vbox)
+        
+        okButton.Bind(wx.EVT_BUTTON, self.SaveAndClose)
+        closeButton.Bind(wx.EVT_BUTTON, self.RestoreOriginalAndClose)
+        addButton.Bind(wx.EVT_BUTTON, self.OnAddButton)
+        self.Bind(wx.EVT_CLOSE, self.RestoreOriginalAndClose)
+        self.listBox.Bind(wx.EVT_KEY_DOWN, self.OnKeyPress)
+        self.listBox.Bind(wx.EVT_LISTBOX, self.OnSelect)
+
+    def OnSelect(self, event):
+        self.currentlySelectedIdx = event.GetSelection()
+
+    def OnAddButton(self, e):
+        self.listBox.Append(self.addressTextCtrl.GetValue())
+        pass
+
+    def SaveAndClose(self, e):
+        self.streamsList = self.listBox.GetStrings()
+        self.Destroy()
+
+    def RestoreOriginalAndClose(self, e):
+        self.streamsList = self._originalStreams
+        self.Destroy()
+
+    def OnKeyPress(self, evt):
+        if evt.GetKeyCode() == wx.WXK_DELETE:
+            if self.currentlySelectedIdx!=-1:
+                self.listBox.Delete(self.currentlySelectedIdx)
