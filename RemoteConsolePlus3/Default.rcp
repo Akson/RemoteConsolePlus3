@@ -3,7 +3,7 @@
     "RCPCanvas": {
         "Connections": [
             {
-                "destinationIdx": 1,
+                "destinationIdx": 5,
                 "sourceIdx": 0
             },
             {
@@ -11,8 +11,16 @@
                 "sourceIdx": 1
             },
             {
-                "destinationIdx": 2,
+                "destinationIdx": 4,
                 "sourceIdx": 3
+            },
+            {
+                "destinationIdx": 2,
+                "sourceIdx": 4
+            },
+            {
+                "destinationIdx": 1,
+                "sourceIdx": 5
             }
         ],
         "Nodes": [
@@ -30,7 +38,7 @@
                         20,
                         20
                     ],
-                    "text": "SourceBackendNode"
+                    "text": "RcpStream"
                 }
             },
             {
@@ -39,10 +47,10 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.OutputFormatting.DefaultHtmlConsoleFormating",
                     "position": [
-                        240,
-                        20
+                        23,
+                        163
                     ],
-                    "text": "BackendNode"
+                    "text": "DefaultHtmlConsoleFormating"
                 }
             },
             {
@@ -51,10 +59,10 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Destinations.HtmlConsole.PyWxHtmlConsole",
                     "position": [
-                        460,
-                        20
+                        199,
+                        309
                     ],
-                    "text": "DestinationBackendNode"
+                    "text": "PyWxHtmlConsole"
                 }
             },
             {
@@ -68,10 +76,34 @@
                     },
                     "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
                     "position": [
-                        22,
-                        122
+                        204,
+                        20
                     ],
-                    "text": "SourceBackendNode"
+                    "text": "RcpStream"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        206,
+                        96
+                    ],
+                    "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        26,
+                        93
+                    ],
+                    "text": "DefaultParser"
                 }
             }
         ]
