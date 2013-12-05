@@ -50,7 +50,7 @@ class Backend(object):
                     processedMessage["Info"]["Dimensions"] = formatDescriptionString[:p] 
                     processedMessage["Info"]["BinaryDataFormat"] = formatDescriptionString[p:] 
         
-        self._parentNode.SendMessage(processedMessage)
+            self._parentNode.SendMessage(processedMessage)
         
     def AppendContextMenuItems(self, menu):
         """
