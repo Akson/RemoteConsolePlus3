@@ -33,7 +33,9 @@ class Backend(object):
         processedMessage = dict(message)
         
         if len(message["Data"].shape) == 2:
-            html = '<table border="1">'
+            matrixName = message["Stream"]  
+            
+            html = matrixName+'<br><table border="1">'
             
             for i in range(message["Data"].shape[0]):
                 html += '<tr>'

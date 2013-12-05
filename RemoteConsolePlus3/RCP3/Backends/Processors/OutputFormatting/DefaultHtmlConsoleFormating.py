@@ -61,7 +61,14 @@ class Backend(object):
         else:
             header = "<a href='{href}'>{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: ".format(**headerParameters)
         
-        processedMessage["Data"] = header + str(processedMessage["Data"])
+        data = str(processedMessage["Data"])
+        if type(processedMessage["Data"]) == dict:
+            jsonStr=json.dumps(processedMessage["Data"], indent=4, separators=(',', ':'))
+            jsonStr=jsonStr.replace(" ", "&nbsp;")  
+            jsonStr=jsonStr.replace("\n", "<br>")
+            data = '<br>'+jsonStr
+            
+        processedMessage["Data"] = header + data 
 
         self._parentNode.SendMessage(processedMessage)
         
