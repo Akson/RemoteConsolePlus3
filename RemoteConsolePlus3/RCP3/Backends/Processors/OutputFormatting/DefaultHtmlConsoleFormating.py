@@ -1,5 +1,6 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
 import time
+import json
 
 class Backend(object):
     def __init__(self, parentNode):
@@ -52,13 +53,15 @@ class Backend(object):
             nameComponentsList = nameComponentsList[:-1]
         headerParameters["ApplicationName"]=".".join(nameComponentsList)
 
+        headerParameters["href"] = "PyShowDict="+json.dumps({"Stream":processedMessage["Stream"], "Info":processedMessage["Info"]}) 
+
         if streamsStack[0] == "Vars":
             headerParameters["VariableName"] = "/".join(streamsStack[1:])
-            header = "<a href=\"http://www.w3schools.com\">{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: <i>{VariableName}</i> = ".format(**headerParameters)
+            header = "<a href='{href}'>{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: <i>{VariableName}</i> = ".format(**headerParameters)
         else:
-            header = "<a href=\"http://www.w3schools.com\">{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: ".format(**headerParameters)
+            header = "<a href='{href}'>{ApplicationName}:{formatedTimeHMS}.{timeMs}</a>: ".format(**headerParameters)
         
-        processedMessage["Data"] = header + processedMessage["Stream"] + ": " + str(processedMessage["Data"])
+        processedMessage["Data"] = header + str(processedMessage["Data"])
 
         self._parentNode.SendMessage(processedMessage)
         

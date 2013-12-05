@@ -3,6 +3,8 @@ import wx.html
 from wx.lib.agw import aui
 from threading import Lock
 from RCP3.OutputWindowsContainer import OutputWindowsContainer
+import json
+from RCP3.CommonUIRoutines import ShowDictAsList
 
 class HTMLConsole(wx.Panel):
     '''
@@ -38,6 +40,13 @@ class HTMLConsole(wx.Panel):
 
         self._messagesListLock = Lock()
         self.SetSize((250, 200))
+        
+        self.Bind(wx.html.EVT_HTML_LINK_CLICKED, self.OnLinkClicked)
+    
+    def OnLinkClicked(self, evt):
+        href = evt.GetLinkInfo().GetHref()
+        if href.find("PyShowDict=") == 0:
+            ShowDictAsList(json.loads(href[len("PyShowDict="):]))
         
     def BuildToolbar( self ) :
         tb = aui.AuiToolBar( self, -1 )

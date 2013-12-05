@@ -14,6 +14,7 @@ class RCP2Client(object):
         self._socket.connect(address)
     
     def SendMessage(self, value, streamName=None, commands=None):
+        streamName = "TextHtml" if not streamName else "TextHtml/"+streamName  
         if self._socket == None:
             raise Exception("Attempt to send message without connection.")
 
