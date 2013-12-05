@@ -75,7 +75,6 @@ class Backend(object):
         
         if dataType == "Binary":
             if not "BinaryDataFormat" in message["Info"]:
-                logging.debug(traceback.format_exc())
                 logging.warning("Cannot parse binary data, no format data available")
                 return
             binaryData = message["Data"]
