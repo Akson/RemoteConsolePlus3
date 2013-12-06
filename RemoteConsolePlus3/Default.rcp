@@ -29,6 +29,14 @@
             {
                 "destinationIdx": 4,
                 "sourceIdx": 7
+            },
+            {
+                "destinationIdx": 9,
+                "sourceIdx": 8
+            },
+            {
+                "destinationIdx": 1,
+                "sourceIdx": 9
             }
         ],
         "Nodes": [
@@ -108,8 +116,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
                     "position": [
-                        26,
-                        93
+                        19,
+                        196
                     ],
                     "text": "DefaultParser"
                 }
@@ -136,6 +144,35 @@
                         77
                     ],
                     "text": "MatrixStreamNameParser"
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "OpenCL"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        406,
+                        20
+                    ],
+                    "text": "RcpStream"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        406,
+                        200
+                    ],
+                    "text": "DefaultParser"
                 }
             }
         ]

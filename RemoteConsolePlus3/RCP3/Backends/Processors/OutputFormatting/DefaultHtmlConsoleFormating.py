@@ -64,10 +64,12 @@ class Backend(object):
         data = str(processedMessage["Data"])
         if type(processedMessage["Data"]) == dict:
             jsonStr=json.dumps(processedMessage["Data"], indent=4, separators=(',', ':'))
-            jsonStr=jsonStr.replace(" ", "&nbsp;")  
-            jsonStr=jsonStr.replace("\n", "<br>")
             data = '<br>'+jsonStr
-            
+
+        if processedMessage["Info"].get("DataType", "String") != "HTML":             
+            data = data.replace(" ", "&nbsp;")
+            data = data.replace("\n", "<br>")
+        
         processedMessage["Data"] = header + data 
 
         self._parentNode.SendMessage(processedMessage)

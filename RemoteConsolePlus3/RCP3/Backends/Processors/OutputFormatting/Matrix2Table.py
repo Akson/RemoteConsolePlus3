@@ -50,6 +50,7 @@ class Backend(object):
             html += '</table>'
             
             processedMessage["Data"] = html
+            processedMessage["Info"]["DataType"] = "HTML"
         
         self._parentNode.SendMessage(processedMessage)
         
