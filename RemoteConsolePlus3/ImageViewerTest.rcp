@@ -43,8 +43,12 @@
                 "sourceIdx": 10
             },
             {
-                "destinationIdx": 12,
+                "destinationIdx": 13,
                 "sourceIdx": 11
+            },
+            {
+                "destinationIdx": 12,
+                "sourceIdx": 13
             }
         ],
         "Nodes": [
@@ -222,6 +226,18 @@
                         333
                     ],
                     "text": "ImageViewer"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.ImageDecoder",
+                    "position": [
+                        596,
+                        266
+                    ],
+                    "text": "ImageDecoder"
                 }
             }
         ]

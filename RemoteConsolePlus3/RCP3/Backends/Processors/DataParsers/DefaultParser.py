@@ -75,7 +75,9 @@ class Backend(object):
 
         if dataType == "JSON":
             processedMessage["Data"] = json.loads(message["Data"])["Value"]
-            print processedMessage["Data"]
+        
+        if dataType == "IMAGE":
+            processedMessage["Data"] = message["Data"]
         
         if dataType == "Binary":
             if not "BinaryDataFormat" in message["Info"]:
@@ -88,6 +90,7 @@ class Backend(object):
             if "Dimensions" in message["Info"]:
                 dimensions = self.ParseDimensionsString(message["Info"]["Dimensions"])
             processedMessage["Data"] = self.ParseBinaryData(binaryData, binaryDataFormat, dimensions)
+            processedMessage["Info"]["DataType"] = str(type(processedMessage["Data"]))
 
         self._parentNode.SendMessage(processedMessage)
         

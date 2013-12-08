@@ -18,7 +18,6 @@ class ImageViewer(wx.Panel):
             dc.DrawBitmap(self.bmp, 0, 0)
 
     def SetImage(self, img):
-        print img.shape
         height, width = img.shape[:2]
         if self.bmp == None or self.height != height or self.width != width:
             self.height = height
