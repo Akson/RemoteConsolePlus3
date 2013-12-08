@@ -46,6 +46,10 @@ class Backend(object):
     
     def ParseDimensionsString(self, dimensionsString):
         dimensionsString = dimensionsString.lower()
+        dimensionsString = dimensionsString.replace("(", "")
+        dimensionsString = dimensionsString.replace(")", "")
+        dimensionsString = dimensionsString.replace("[", "")
+        dimensionsString = dimensionsString.replace("]", "")
         dimensionsString = dimensionsString.replace(" ", "")
         dimensionsString = dimensionsString.replace("x", ",")
         dimensionsString = dimensionsString.replace(";", ",")
@@ -59,7 +63,6 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
-        
         processedMessage = dict()
         processedMessage["Stream"] = message["Stream"] 
         processedMessage["Info"] = message["Info"]
@@ -72,6 +75,7 @@ class Backend(object):
 
         if dataType == "JSON":
             processedMessage["Data"] = json.loads(message["Data"])["Value"]
+            print processedMessage["Data"]
         
         if dataType == "Binary":
             if not "BinaryDataFormat" in message["Info"]:
