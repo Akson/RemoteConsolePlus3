@@ -3,7 +3,6 @@ import logging
 import json
 import struct
 import numpy as np
-import traceback
 
 class Backend(object):
     def __init__(self, parentNode):

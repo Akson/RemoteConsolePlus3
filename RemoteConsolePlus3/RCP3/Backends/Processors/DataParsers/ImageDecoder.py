@@ -1,5 +1,4 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
-import re
 import cv2
 import numpy as np
 
