@@ -23,7 +23,6 @@ class Proxy(object):
     def UnRegisterStreamListener(streamName, streamListener):
         with Proxy._clientsListLock: 
             Proxy._clientsConnectedToStreams[streamName].remove(streamListener)
-        print Proxy._clientsConnectedToStreams
         
     @staticmethod
     def SendMessageToClients(streamName, message):
@@ -31,8 +30,10 @@ class Proxy(object):
             return
         with Proxy._clientsListLock: 
             for client in Proxy._clientsConnectedToStreams[streamName]:
-                print "Sending message:", message
-                client.write_message(message)
+                try:
+                    client.write_message(message)
+                except:
+                    pass #THIS IS A DIRTY HACK!!! TORNADO IS NOT THREAD SAFE!!!
 
     @staticmethod
     def ProxyThreadFunction(inputQueue):
@@ -42,8 +43,13 @@ class Proxy(object):
                 incomingDict = json.loads(incomingObject)
                 Proxy.SendMessageToClients(incomingDict["StreamName"], incomingDict["Message"])
             except Empty:
-                print "No incoming messages..."
-        
+                pass
+
+class IndexHandler(tornado.web.RequestHandler):
+    @tornado.web.asynchronous
+    def get(self):
+        self.render("TestWebSockets.html")
+                
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self, *args):
         print "open"
@@ -60,12 +66,13 @@ def RunWebSocketsServer(proxyInputqueue):
     thread = Thread(target = Proxy.ProxyThreadFunction, args = (proxyInputqueue, ))
     thread.start()
     
-    app = tornado.web.Application([(r'/WebSockets/', WebSocketHandler)])
+    app = tornado.web.Application([
+        (r'/', IndexHandler),
+        (r'/WebSockets/', WebSocketHandler),
+    ])
     app.listen(55558)
     tornado.ioloop.IOLoop.instance().start()
     thread.join()
-    
-proxyQueue = None
     
 if __name__ == '__main__':
     RunWebSocketsServer(multiprocessing.queues.Queue())

@@ -5,7 +5,6 @@ from threading import Lock
 from RCP3.OutputWindowsContainer import OutputWindowsContainer
 import json
 from RCP3.CommonUIRoutines import ShowDictAsList
-from RCP3.Infrastructure import WebSocketServer
 
 class HTMLConsole(wx.Panel):
     '''
@@ -153,9 +152,6 @@ class Backend(object):
         """
         if self._htmlConsole:
             self._htmlConsole.AddHtmlLine(str(message["Data"]))
-            
-        WebSocketServer.proxyQueue.put(json.dumps({"StreamName":"HtmlConsole", "Message":str(message["Data"])}))
-
 
     def Delete(self):
         """

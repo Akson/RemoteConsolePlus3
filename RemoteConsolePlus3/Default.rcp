@@ -11,6 +11,10 @@
                 "sourceIdx": 1
             },
             {
+                "destinationIdx": 10,
+                "sourceIdx": 1
+            },
+            {
                 "destinationIdx": 7,
                 "sourceIdx": 3
             },
@@ -173,6 +177,18 @@
                         200
                     ],
                     "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "DestinationBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Destinations.WebSockets.SendToWebSocket",
+                    "position": [
+                        316,
+                        329
+                    ],
+                    "text": "SendToWebSocket"
                 }
             }
         ]
