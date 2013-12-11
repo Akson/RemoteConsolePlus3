@@ -1,6 +1,10 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
 from RCP3.Infrastructure import WebSocketServer
 import json
+import wx
+import webbrowser
+import socket
+from RCP3.Configuration import Config
 
 class Backend(object):
     def __init__(self, parentNode):
@@ -36,3 +40,17 @@ class Backend(object):
         This method is called when a parent node is deleted.
         """
         pass
+
+    def OnOpenConsoleInBrowser(self, evt):
+        linkDict = {}
+        linkDict["serverAddress"]=socket.gethostname()
+        linkDict["serverPort"]=Config["Web server"]["Port"]
+        linkDict["streamName"]=self._streamName
+
+        link = "http://{serverAddress}:{serverPort}/OutputConsole/?streamName={streamName}".format(**linkDict)
+        webbrowser.open(link)
+
+    def AppendContextMenuItems(self, menu):
+        item = wx.MenuItem(menu, wx.NewId(), "Open console in browser")
+        menu.Bind(wx.EVT_MENU, self.OnOpenConsoleInBrowser, item)
+        menu.AppendItem(item)

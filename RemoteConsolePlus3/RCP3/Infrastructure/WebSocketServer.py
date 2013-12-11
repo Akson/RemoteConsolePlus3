@@ -9,6 +9,7 @@ from Queue import Empty
 import multiprocessing.queues
 import tornado.template
 import socket
+from RCP3.Configuration import Config
 
 class Proxy(object):
     _clientsConnectedToStreams = {}
@@ -52,7 +53,7 @@ class IndexHandler(tornado.web.RequestHandler):
     def get(self):
         WebSocketPathDict = {}
         WebSocketPathDict["serverAddress"]=socket.gethostname()
-        WebSocketPathDict["serverPort"]=55558
+        WebSocketPathDict["serverPort"]=Config["Web server"]["Port"]
         WebSocketPathDict["streamName"]=self.get_argument("streamName")
         
         WebSocketPath = "ws://{serverAddress}:{serverPort}/WebSockets/?streamName={streamName}".format(**WebSocketPathDict)
@@ -78,7 +79,7 @@ def RunWebSocketsServer(proxyInputqueue):
         (r'/OutputConsole/', IndexHandler),
         (r'/WebSockets/', WebSocketHandler),
     ])
-    app.listen(55558)
+    app.listen(Config["Web server"]["Port"])
     tornado.ioloop.IOLoop.instance().start()
     thread.join()
     

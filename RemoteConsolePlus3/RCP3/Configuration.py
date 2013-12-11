@@ -31,6 +31,8 @@ Config["UI behavior"]["Output windows container"]["Window size"] = [640, 480]
 Config["Backends"] = {}
 Config["Backends"]["Thread stop waiting time (ms)"] = 200
 
+Config["Web server"] = {}
+Config["Web server"]["Port"] = 55558
 
 
 
