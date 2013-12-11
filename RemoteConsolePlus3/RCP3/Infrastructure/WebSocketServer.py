@@ -7,6 +7,8 @@ import threading
 import json
 from Queue import Empty
 import multiprocessing.queues
+import tornado.template
+import socket
 
 class Proxy(object):
     _clientsConnectedToStreams = {}
@@ -48,12 +50,18 @@ class Proxy(object):
 class IndexHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
-        self.render("TestWebSockets.html")
+        WebSocketPathDict = {}
+        WebSocketPathDict["serverAddress"]=socket.gethostname()
+        WebSocketPathDict["serverPort"]=55558
+        WebSocketPathDict["streamName"]=self.get_argument("streamName")
+        
+        WebSocketPath = "ws://{serverAddress}:{serverPort}/WebSockets/?streamName={streamName}".format(**WebSocketPathDict)
+        self.render("TestWebSockets.html", WebSocketPath=WebSocketPath)
                 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self, *args):
         print "open"
-        self._streamName = self.get_argument("StreamName")
+        self._streamName = self.get_argument("streamName")
         Proxy.RegisterStreamListener(self._streamName, self)
         self.stream.set_nodelay(True)
 
@@ -67,12 +75,14 @@ def RunWebSocketsServer(proxyInputqueue):
     thread.start()
     
     app = tornado.web.Application([
-        (r'/', IndexHandler),
+        (r'/OutputConsole/', IndexHandler),
         (r'/WebSockets/', WebSocketHandler),
     ])
     app.listen(55558)
     tornado.ioloop.IOLoop.instance().start()
     thread.join()
+    
+proxyQueue = None
     
 if __name__ == '__main__':
     RunWebSocketsServer(multiprocessing.queues.Queue())

@@ -31,7 +31,7 @@
             {
                 document.getElementById("messages").innerHTML = "WebSocket is supported by your Browser!";
 
-                var ws = new WebSocket("ws://137.203.140.8:55558/WebSockets/?StreamName=HtmlConsole");
+                var ws = new WebSocket("{{WebSocketPath}}");
                 ws.onmessage = ProcessIncomingMessage
                 ws.onclose = function() { 
                     document.getElementById("messages").innerHTML = "Connection is closed...";

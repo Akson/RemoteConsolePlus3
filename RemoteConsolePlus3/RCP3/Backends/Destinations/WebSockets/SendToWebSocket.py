@@ -5,20 +5,22 @@ import json
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
+        self._streamName = "DefaultConsole"
     
     def GetParameters(self):
         """
         Returns a dictionary with object parameters, their values, 
         limits and ways to change them.
         """
-        return {}
+        return {"StreamName":self._streamName}
     
     def SetParameters(self, parameters):
         """
         Gets a dictionary with parameter values and
         update object parameters accordingly
         """
-        pass
+        if "StreamName" in parameters:
+            self._streamName = parameters["StreamName"]
     
     def ProcessMessage(self, message):
         """
@@ -27,7 +29,7 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
-        WebSocketServer.proxyQueue.put(json.dumps({"StreamName":"HtmlConsole", "Message":str(message["Data"])}))
+        WebSocketServer.proxyQueue.put(json.dumps({"StreamName":self._streamName, "Message":str(message["Data"])}))
 
     def Delete(self):
         """
