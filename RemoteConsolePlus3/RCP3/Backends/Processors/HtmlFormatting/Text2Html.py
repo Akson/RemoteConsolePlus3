@@ -32,7 +32,7 @@ class Backend(object):
         """
         processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
 
-        data = message["Data"]
+        data = str(message["Data"])
         data = data.replace(" ", "&nbsp;")
         data = data.replace("\n", "<br>")
         processedMessage["Data"] = data 

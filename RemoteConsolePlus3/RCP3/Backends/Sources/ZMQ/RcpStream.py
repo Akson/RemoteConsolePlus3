@@ -8,6 +8,7 @@ from RCP3.Backends.Sources.ZMQ.Tools.UI import ServerSelectionDialog,\
     StreamsSelectionDialog
 import logging
 import time
+from RCP3 import DefaultParser
 
 
 class Backend(object):
@@ -105,5 +106,5 @@ class Backend(object):
         if messageComponents[1] != "":
             parsedMessage["Info"] = json.loads(messageComponents[1])
         parsedMessage["Info"]["ServerTimeStampMsSince1970"] = int(time.time()*1000)
-
+        
         self._parentNode.SendMessage(parsedMessage)
