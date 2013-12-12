@@ -97,14 +97,15 @@ class Backend(object):
         Incoming message format is:
         [Stream name string]0[Information in JSON format]0[Data]
         """
+        firstSeparatorPosition = zmqMessage.find(chr(0))
+        secondSeparatorPosition = zmqMessage.find(chr(0), firstSeparatorPosition+1)
         parsedMessage = {}
-        messageComponents = zmqMessage.split(chr(0), 2)
-        parsedMessage["Stream"] = messageComponents[0]
-        parsedMessage["Data"] = messageComponents[2]
-        
+        parsedMessage["Stream"] = zmqMessage[:firstSeparatorPosition]
+        parsedMessage["Data"] = zmqMessage[secondSeparatorPosition+1:]
         parsedMessage["Info"] = {}
-        if messageComponents[1] != "":
-            parsedMessage["Info"] = json.loads(messageComponents[1])
+        infoString = zmqMessage[firstSeparatorPosition+1:secondSeparatorPosition-1]
+        if infoString != "":
+            parsedMessage["Info"] = json.loads(infoString)
         parsedMessage["Info"]["ServerTimeStampMsSince1970"] = int(time.time()*1000)
         
         self._parentNode.SendMessage(parsedMessage)

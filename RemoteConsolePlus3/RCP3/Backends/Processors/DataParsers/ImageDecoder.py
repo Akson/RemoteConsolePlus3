@@ -34,12 +34,28 @@ class Backend(object):
         should be called with an appropriate message.
         """
 
-        processedMessage = dict(message)
-        if message["Info"]["DataType"] != "<type 'numpy.ndarray'>":
+        processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
+
+        if (not "Width" in message["Info"]) or (not "Height" in message["Info"]):
             #Try to decode image in one of standard formats
             decodingResult = cv2.imdecode(np.frombuffer(message["Data"], dtype=np.uint8), -1)
             processedMessage["Data"] = decodingResult 
-            processedMessage["Info"]["DataType"] = str(type(processedMessage["Data"]))
+        else:
+            w = int(message["Info"]["Width"])
+            h = int(message["Info"]["Height"])
+            BytesPerPixel = int(message["Info"]["BytesPerPixel"])
+            LineSizeInBytes = int(message["Info"].get("LineSizeInBytes", w*BytesPerPixel))
+            
+            print w, h, BytesPerPixel, LineSizeInBytes
+            
+            if LineSizeInBytes != w*BytesPerPixel:
+                #We have padding bytes...
+                print "Not implemented!!!"
+                processedMessage["Data"] = None
+            else:
+                img = np.reshape(message["Data"], (h, w, BytesPerPixel))
+                cv2.imwrite("test.jpg", img)
+                processedMessage["Data"] = img
             
         self._parentNode.SendMessage(processedMessage)
             

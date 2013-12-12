@@ -31,6 +31,7 @@ class Backend(object):
         should be called with an appropriate message.
         """
         processedMessage = dict(message)
+        print message
 
         html = '<br><img src="http://10.0.0.7:8000/img.jpg" alt="Image should come here" width="320" height="240">'
         
