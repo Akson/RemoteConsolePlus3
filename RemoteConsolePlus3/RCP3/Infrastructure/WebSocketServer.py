@@ -34,7 +34,7 @@ class Proxy(object):
         with Proxy._clientsListLock: 
             for client in Proxy._clientsConnectedToStreams[streamName]:
                 try:
-                    client.write_message(message)
+                    client.write_message(json.dumps(message))
                 except:
                     pass #THIS IS A DIRTY HACK!!! TORNADO IS NOT THREAD SAFE!!!
 
@@ -78,7 +78,8 @@ def RunWebSocketsServer(proxyInputqueue):
     app = tornado.web.Application([
         (r'/OutputConsole/', IndexHandler),
         (r'/WebSockets/', WebSocketHandler),
-    ])
+    ], debug=False)
+    
     app.listen(Config["Web server"]["Port"])
     tornado.ioloop.IOLoop.instance().start()
     thread.join()

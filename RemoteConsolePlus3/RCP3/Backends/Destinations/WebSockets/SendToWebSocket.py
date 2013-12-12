@@ -33,7 +33,7 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
-        WebSocketServer.proxyQueue.put(json.dumps({"StreamName":self._streamName, "Message":str(message["Data"])}))
+        WebSocketServer.proxyQueue.put(json.dumps({"StreamName":self._streamName, "Message":message}))
 
     def Delete(self):
         """

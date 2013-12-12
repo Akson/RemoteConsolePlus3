@@ -3,7 +3,7 @@
     "RCPCanvas": {
         "Connections": [
             {
-                "destinationIdx": 5,
+                "destinationIdx": 3,
                 "sourceIdx": 0
             },
             {
@@ -11,27 +11,23 @@
                 "sourceIdx": 1
             },
             {
-                "destinationIdx": 10,
-                "sourceIdx": 1
+                "destinationIdx": 3,
+                "sourceIdx": 2
             },
             {
-                "destinationIdx": 7,
-                "sourceIdx": 3
-            },
-            {
-                "destinationIdx": 6,
+                "destinationIdx": 5,
                 "sourceIdx": 4
             },
             {
-                "destinationIdx": 1,
+                "destinationIdx": 6,
                 "sourceIdx": 5
             },
             {
-                "destinationIdx": 1,
+                "destinationIdx": 7,
                 "sourceIdx": 6
             },
             {
-                "destinationIdx": 4,
+                "destinationIdx": 3,
                 "sourceIdx": 7
             },
             {
@@ -39,8 +35,20 @@
                 "sourceIdx": 8
             },
             {
-                "destinationIdx": 1,
+                "destinationIdx": 10,
                 "sourceIdx": 9
+            },
+            {
+                "destinationIdx": 3,
+                "sourceIdx": 10
+            },
+            {
+                "destinationIdx": 12,
+                "sourceIdx": 11
+            },
+            {
+                "destinationIdx": 3,
+                "sourceIdx": 12
             }
         ],
         "Nodes": [
@@ -50,39 +58,58 @@
                     "backendParameters": {
                         "serverAddress": "tcp://localhost:55559",
                         "streamsList": [
-                            "TextHtml"
+                            "_HtmlOut"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        21,
+                        398
+                    ],
+                    "text": "RcpStream: [u'_HtmlOut']"
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "_TextOut"
                         ]
                     },
                     "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
                     "position": [
                         20,
-                        20
+                        328
                     ],
-                    "text": "RcpStream"
+                    "text": "RcpStream: [u'_TextOut']"
                 }
             },
             {
                 "NodeClass": "BackendNode",
                 "NodeParameters": {
                     "backendParameters": {},
-                    "backendPath": "RCP3.Backends.Processors.OutputFormatting.DefaultHtmlConsoleFormating",
+                    "backendPath": "RCP3.Backends.Processors.HtmlFormatting.Text2Html",
                     "position": [
-                        128,
-                        255
+                        222,
+                        328
                     ],
-                    "text": "DefaultHtmlConsoleFormating"
+                    "text": "Text2Html"
                 }
             },
             {
                 "NodeClass": "DestinationBackendNode",
                 "NodeParameters": {
-                    "backendParameters": {},
-                    "backendPath": "RCP3.Backends.Destinations.HtmlConsole.PyWxHtmlConsole",
+                    "backendParameters": {
+                        "StreamName": "DefaultConsole"
+                    },
+                    "backendPath": "RCP3.Backends.Destinations.WebSockets.SendToWebSocket",
                     "position": [
-                        126,
-                        326
+                        602,
+                        396
                     ],
-                    "text": "PyWxHtmlConsole"
+                    "text": "SendToWebSocket"
                 }
             },
             {
@@ -96,46 +123,10 @@
                     },
                     "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
                     "position": [
-                        215,
-                        19
+                        23,
+                        192
                     ],
-                    "text": "RcpStream"
-                }
-            },
-            {
-                "NodeClass": "BackendNode",
-                "NodeParameters": {
-                    "backendParameters": {},
-                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
-                    "position": [
-                        218,
-                        140
-                    ],
-                    "text": "DefaultParser"
-                }
-            },
-            {
-                "NodeClass": "BackendNode",
-                "NodeParameters": {
-                    "backendParameters": {},
-                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
-                    "position": [
-                        19,
-                        196
-                    ],
-                    "text": "DefaultParser"
-                }
-            },
-            {
-                "NodeClass": "BackendNode",
-                "NodeParameters": {
-                    "backendParameters": {},
-                    "backendPath": "RCP3.Backends.Processors.OutputFormatting.Matrix2Table",
-                    "position": [
-                        214,
-                        198
-                    ],
-                    "text": "Matrix2Table"
+                    "text": "RcpStream: [u'MatrixPrinter']"
                 }
             },
             {
@@ -144,27 +135,10 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.DataParsers.MatrixStreamNameParser",
                     "position": [
-                        215,
-                        77
+                        219,
+                        189
                     ],
                     "text": "MatrixStreamNameParser"
-                }
-            },
-            {
-                "NodeClass": "SourceBackendNode",
-                "NodeParameters": {
-                    "backendParameters": {
-                        "serverAddress": "tcp://localhost:55559",
-                        "streamsList": [
-                            "OpenCL"
-                        ]
-                    },
-                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
-                    "position": [
-                        406,
-                        20
-                    ],
-                    "text": "RcpStream"
                 }
             },
             {
@@ -173,22 +147,92 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
                     "position": [
-                        406,
-                        200
+                        395,
+                        188
                     ],
                     "text": "DefaultParser"
                 }
             },
             {
-                "NodeClass": "DestinationBackendNode",
+                "NodeClass": "BackendNode",
                 "NodeParameters": {
                     "backendParameters": {},
-                    "backendPath": "RCP3.Backends.Destinations.WebSockets.SendToWebSocket",
+                    "backendPath": "RCP3.Backends.Processors.HtmlFormatting.Matrix2HtmlTable",
                     "position": [
-                        316,
-                        329
+                        601,
+                        183
                     ],
-                    "text": "SendToWebSocket"
+                    "text": "Matrix2HtmlTable"
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "_JsonOut"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        17,
+                        257
+                    ],
+                    "text": "RcpStream: [u'_JsonOut']"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        219,
+                        255
+                    ],
+                    "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.HtmlFormatting.Json2Html",
+                    "position": [
+                        401,
+                        258
+                    ],
+                    "text": "Json2Html"
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "_VarOut"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        20,
+                        452
+                    ],
+                    "text": "RcpStream: [u'_VarOut']"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.HtmlFormatting.Var2Html",
+                    "position": [
+                        228,
+                        449
+                    ],
+                    "text": "Var2Html"
                 }
             }
         ]

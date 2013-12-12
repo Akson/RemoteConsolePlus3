@@ -23,7 +23,7 @@ Config["UI behavior"]["Message processing graph window"]["Window position"] = [0
 Config["UI behavior"]["Message processing graph window"]["Window size"] = [640, 480]
 
 Config["UI behavior"]["Output windows container"] = {}
-Config["UI behavior"]["Output windows container"]["Show on start"] = True
+Config["UI behavior"]["Output windows container"]["Show on start"] = False
 Config["UI behavior"]["Output windows container"]["Show after adding new window"] = False
 Config["UI behavior"]["Output windows container"]["Window position"] = [0, 480]
 Config["UI behavior"]["Output windows container"]["Window size"] = [640, 480]

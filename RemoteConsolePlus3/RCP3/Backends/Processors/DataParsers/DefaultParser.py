@@ -73,24 +73,22 @@ class Backend(object):
             processedMessage["Data"] = message["Data"]
 
         if dataType == "JSON":
-            processedMessage["Data"] = json.loads(message["Data"])["Value"]
-        
-        if dataType == "IMAGE":
-            processedMessage["Data"] = message["Data"]
+            jsonObj = json.loads(message["Data"])
+            processedMessage["Data"] = jsonObj.get("_Value", jsonObj) 
         
         if dataType == "Binary":
             if not "BinaryDataFormat" in message["Info"]:
                 logging.warning("Cannot parse binary data, no format data available")
                 return
-            binaryData = message["Data"]
             binaryDataFormat = message["Info"]["BinaryDataFormat"]
+            
             #We may have multi-dimensional data
             dimensions = None
             if "Dimensions" in message["Info"]:
                 dimensions = self.ParseDimensionsString(message["Info"]["Dimensions"])
-            processedMessage["Data"] = self.ParseBinaryData(binaryData, binaryDataFormat, dimensions)
-            processedMessage["Info"]["DataType"] = str(type(processedMessage["Data"]))
 
+            processedMessage["Data"] = self.ParseBinaryData(message["Data"], binaryDataFormat, dimensions)
+        
         self._parentNode.SendMessage(processedMessage)
         
     def AppendContextMenuItems(self, menu):

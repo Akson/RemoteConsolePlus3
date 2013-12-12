@@ -7,6 +7,7 @@ import wx
 from RCP3.Backends.Sources.ZMQ.Tools.UI import ServerSelectionDialog,\
     StreamsSelectionDialog
 import logging
+import time
 
 
 class Backend(object):
@@ -21,6 +22,8 @@ class Backend(object):
         self._reconnectToServer = False
 
         self.threadStopWaitTimeMs = Config["Backends"]["Thread stop waiting time (ms)"]
+        
+        self.text = None
     
     def AppendContextMenuItems(self, menu):
         item = wx.MenuItem(menu, wx.NewId(), "Select router address")
@@ -59,7 +62,7 @@ class Backend(object):
             if not self._listeningThreadRunning:
                 thread.start_new_thread(self.StreamListenerThreadFunc, ())
         
-        
+        self.text = str(self._streamsList)
         
     def StreamListenerThreadFunc(self):
         self._listeningThreadRunning = True
@@ -96,9 +99,13 @@ class Backend(object):
         parsedMessage = {}
         messageComponents = zmqMessage.split(chr(0), 2)
         parsedMessage["Stream"] = messageComponents[0]
+        parsedMessage["Data"] = messageComponents[2]
+        
         parsedMessage["Info"] = {}
         if messageComponents[1] != "":
             parsedMessage["Info"] = json.loads(messageComponents[1])
-        parsedMessage["Data"] = messageComponents[2]
+        parsedMessage["Info"]["ServerTimeStampMsSince1970"] = int(time.time()*1000)
+
+        print parsedMessage
 
         self._parentNode.SendMessage(parsedMessage)

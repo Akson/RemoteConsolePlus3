@@ -1,52 +1,98 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-	<script type="text/javascript">
-		var messages = [];
-		var needUpdate = false;
-		function RenderMessages()
-		{
-			//console.log("RenderMessages");
-			if(needUpdate)
-			{
-				//console.log("rendering...");
-	            document.getElementById("messages").innerHTML = messages.join("<br>");
-	            window.scrollTo(0,document.body.scrollHeight);
-	            needUpdate = false;
-			}
-		}
-		function ProcessIncomingMessage(evt)
-		{
-        	console.log("onmessage", evt.data);
-            messages.push(evt.data);
-            if(messages.length > 100)
-            	messages.shift();
-            
-            needUpdate = true;
-		}
-        function OnLoad() 
-        {
-            if ("WebSocket" in window) 
-            {
-                document.getElementById("messages").innerHTML = "WebSocket is supported by your Browser!";
+<head>
+<meta charset="utf-8">
 
-                var ws = new WebSocket("{{WebSocketPath}}");
-                ws.onmessage = ProcessIncomingMessage
-                ws.onclose = function() { 
-                    document.getElementById("messages").innerHTML = "Connection is closed...";
-                };
+<style type="text/css">
+pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+</style> 
+        
+<script type="text/javascript">
+var messages = [];
+var needUpdate = false;
 
-                window.setInterval("javascript:RenderMessages()",50);
-			} 
-            else 
-            {
-                document.getElementById("messages").innerHTML = "WebSocket NOT supported by your Browser!";
+function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
             }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
         }
-        </script>
-    </head>
-    <body onload="javascript:OnLoad()">
-        <div id="messages"></div>
-    </body>
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+
+function RenderMessages()
+{
+	if(needUpdate)
+	{
+		resultHtml = ""
+		messages.forEach(function(message) {
+			resultHtml += message.Data;
+			resultHtml += "<br>";
+			/*resultHtml += "<pre>";
+			resultHtml += syntaxHighlight(message.Info);
+			resultHtml += "</pre>";
+			console.log(syntaxHighlight(message.Info))
+			resultHtml += "<br>";*/
+			
+		});
+		document.getElementById("messages").innerHTML = resultHtml
+        //document.getElementById("messages").innerHTML = messages.join("<br>");
+           
+		window.scrollTo(0,document.body.scrollHeight);
+           needUpdate = false;
+	}
+}
+function ProcessIncomingMessage(evt)
+{
+	messageDict = JSON.parse(evt.data);
+	//console.log("onmessage", messageDict);
+    messages.push(messageDict);
+    if(messages.length > 100)
+    	messages.shift();
+    
+    needUpdate = true;
+}
+function OnLoad() 
+{
+    if ("WebSocket" in window) 
+    {
+        document.getElementById("messages").innerHTML = "WebSocket is supported by your Browser!";
+
+        var ws = new WebSocket("{{WebSocketPath}}");
+        ws.onmessage = ProcessIncomingMessage
+        ws.onclose = function() { 
+            document.getElementById("messages").innerHTML = "Connection is closed...";
+        };
+
+        window.setInterval("javascript:RenderMessages()",50);
+	} 
+    else 
+    {
+        document.getElementById("messages").innerHTML = "WebSocket NOT supported by your Browser!";
+    }
+}
+</script>
+
+</head>
+<body onload="javascript:OnLoad()">
+    <div id="messages"></div>
+</body>
 </html>

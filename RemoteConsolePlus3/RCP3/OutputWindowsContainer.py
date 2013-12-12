@@ -21,9 +21,8 @@ class OutputWindowsContainer(wx.Frame):
         oldWindow = OutputWindowsContainer._instance
         OutputWindowsContainer._instance = OutputWindowsContainer(oldWindow.messageProcessingGraphWindow)
         oldWindow.Destroy()
-        OutputWindowsContainer.Instance().Show()
-
-    
+        if Config["UI behavior"]["Output windows container"]["Show after adding new window"]:
+            OutputWindowsContainer.Instance().Show()
     
     def __init__(self, messageProcessingGraphWindow):
         wx.Frame.__init__(self, 
