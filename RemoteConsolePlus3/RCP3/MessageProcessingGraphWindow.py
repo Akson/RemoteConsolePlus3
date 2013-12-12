@@ -12,10 +12,11 @@ import os.path
 import time
 import logging
 import traceback
+from MoveMe.Canvas.Objects.MessageProcessingNodes.Hub import HubMessageProcessingNode
 
 class RCPCanvas(Canvas):
     def __init__(self, parent):
-        self.supportedClassesList =[SourceBackendNode, BackendNode, DestinationBackendNode]
+        self.supportedClassesList =[SourceBackendNode, BackendNode, DestinationBackendNode, HubMessageProcessingNode]
         super(RCPCanvas, self).__init__(parent=parent, nodesFactory=DefaultNodesFactory(self.supportedClassesList))
         self.applicationId = Config["Application ID"]
         
