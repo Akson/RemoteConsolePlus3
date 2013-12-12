@@ -106,6 +106,4 @@ class Backend(object):
             parsedMessage["Info"] = json.loads(messageComponents[1])
         parsedMessage["Info"]["ServerTimeStampMsSince1970"] = int(time.time()*1000)
 
-        print parsedMessage
-
         self._parentNode.SendMessage(parsedMessage)
