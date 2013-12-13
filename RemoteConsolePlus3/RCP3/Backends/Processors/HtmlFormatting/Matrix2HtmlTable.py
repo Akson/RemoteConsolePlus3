@@ -1,4 +1,5 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
+import math
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
@@ -33,15 +34,20 @@ class Backend(object):
         processedMessage = dict(message)
         
         if len(message["Data"].shape) == 2:
-            matrixName = message["Stream"]  
+            matrixName = message["Stream"]
+            if matrixName.find("MatrixPrinter") == 0:
+                matrixName = matrixName[14:]  
             
-            html = matrixName+'<br><table border="1">'
+            html = '<table border="1" style="display:inline-block">'
+            html+= '<caption>'+matrixName+'</caption>'
+            
+            columnWidthPercent = math.floor(100/message["Data"].shape[1])
             
             for i in range(message["Data"].shape[0]):
                 html += '<tr>'
 
                 for j in range(message["Data"].shape[1]):
-                    html += '<td>'
+                    html += '<td width="%d%%">'%columnWidthPercent
                     html += str(message["Data"][i,j])
                     html += '</td>'
                 

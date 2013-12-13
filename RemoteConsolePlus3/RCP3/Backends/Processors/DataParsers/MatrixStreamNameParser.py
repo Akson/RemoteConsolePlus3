@@ -48,7 +48,9 @@ class Backend(object):
                     p = len(formatDescriptionString) - reResult.start() 
                     
                     processedMessage["Info"]["Dimensions"] = formatDescriptionString[:p] 
-                    processedMessage["Info"]["BinaryDataFormat"] = formatDescriptionString[p:] 
+                    processedMessage["Info"]["BinaryDataFormat"] = formatDescriptionString[p:]
+                    
+                    processedMessage["Stream"] = "/".join(components[:-1])
         
             self._parentNode.SendMessage(processedMessage)
         
