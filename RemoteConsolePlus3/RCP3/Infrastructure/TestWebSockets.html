@@ -11,10 +11,14 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .null { color: magenta; }
 .key { color: red; }
 </style> 
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+</script>
         
 <script type="text/javascript">
 var messages = [];
 var needUpdate = false;
+var reconnectingTimer = undefined;
 
 function syntaxHighlight(json) {
     if (typeof json != 'string') {
@@ -42,46 +46,53 @@ function RenderMessages()
 {
 	if(needUpdate)
 	{
-		resultHtml = ""
-		messages.forEach(function(message) {
-			resultHtml += message.Data;
-			resultHtml += "<br>";
-			/*resultHtml += "<pre>";
-			resultHtml += syntaxHighlight(message.Info);
-			resultHtml += "</pre>";
-			console.log(syntaxHighlight(message.Info))
-			resultHtml += "<br>";*/
-			
-		});
-		document.getElementById("messages").innerHTML = resultHtml
-        //document.getElementById("messages").innerHTML = messages.join("<br>");
-           
+        document.getElementById("messages").innerHTML = messages.join("");
 		window.scrollTo(0,document.body.scrollHeight);
-           needUpdate = false;
+		needUpdate = false;
 	}
 }
+
 function ProcessIncomingMessage(evt)
 {
-	messageDict = JSON.parse(evt.data);
-	//console.log("onmessage", messageDict);
-    messages.push(messageDict);
+	message = JSON.parse(evt.data);
+	//console.log("onmessage", message);
+	
+	messageHtml = message.Data;
+	messageHtml += '<a href="javascript:void(0)" onclick="$(this).next().slideToggle(100);" >*</a>'
+	messageHtml += '<pre style="display:none;">';
+	messageHtml += syntaxHighlight(message.Info);
+	messageHtml += "</pre>";
+	messageHtml += "<br>";
+	
+    messages.push(messageHtml);
     if(messages.length > 100)
     	messages.shift();
     
     needUpdate = true;
 }
+function Connect()
+{
+    var ws = new WebSocket("{{WebSocketPath}}");
+    ws.onmessage = ProcessIncomingMessage
+    document.getElementById("system").innerHTML = "";
+    ws.onclose = function() 
+    { 
+        document.getElementById("system").innerHTML = "<br>Disconnected. Reconnectiong...";
+        window.scrollTo(0,document.body.scrollHeight);
+        reconnectingTimer = window.setInterval("javascript:Reconnect()",1000);
+    };
+}
+function Reconnect()
+{
+	Connect();
+	window.clearInterval(reconnectingTimer)
+}
 function OnLoad() 
 {
     if ("WebSocket" in window) 
     {
-        document.getElementById("messages").innerHTML = "WebSocket is supported by your Browser!";
-
-        var ws = new WebSocket("{{WebSocketPath}}");
-        ws.onmessage = ProcessIncomingMessage
-        ws.onclose = function() { 
-            document.getElementById("messages").innerHTML = "Connection is closed...";
-        };
-
+        document.getElementById("messages").innerHTML = "WebSocket is supported by your Browser! Waiting for incoming messages...";
+        Connect();
         window.setInterval("javascript:RenderMessages()",50);
 	} 
     else 
@@ -94,5 +105,6 @@ function OnLoad()
 </head>
 <body onload="javascript:OnLoad()">
     <div id="messages"></div>
+    <div id="system"></div>
 </body>
 </html>

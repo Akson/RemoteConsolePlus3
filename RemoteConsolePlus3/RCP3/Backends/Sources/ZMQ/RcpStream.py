@@ -103,8 +103,9 @@ class Backend(object):
         parsedMessage["Stream"] = zmqMessage[:firstSeparatorPosition]
         parsedMessage["Data"] = zmqMessage[secondSeparatorPosition+1:]
         parsedMessage["Info"] = {}
-        infoString = zmqMessage[firstSeparatorPosition+1:secondSeparatorPosition-1]
+        infoString = zmqMessage[firstSeparatorPosition+1:secondSeparatorPosition]
         if infoString != "":
+            print infoString 
             parsedMessage["Info"] = json.loads(infoString)
         parsedMessage["Info"]["ServerTimeStampMsSince1970"] = int(time.time()*1000)
         
