@@ -10,6 +10,14 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
+
+.consoleButtons {
+    position:fixed;
+    top:10px;
+    right:10px;
+    height:10px;
+    align:right;
+}
 </style> 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
@@ -19,6 +27,7 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 var messages = [];
 var needUpdate = false;
 var reconnectingTimer = undefined;
+var freezed = false;
 
 function syntaxHighlight(json) {
     if (typeof json != 'string') {
@@ -44,7 +53,7 @@ function syntaxHighlight(json) {
 
 function RenderMessages()
 {
-	if(needUpdate)
+	if(needUpdate && !freezed)
 	{
         document.getElementById("messages").innerHTML = messages.join("");
 		window.scrollTo(0,document.body.scrollHeight);
@@ -100,10 +109,25 @@ function OnLoad()
         document.getElementById("messages").innerHTML = "WebSocket NOT supported by your Browser!";
     }
 }
+function ClearConsole()
+{
+	messages = [];
+	needUpdate = true;
+}
+function FreezeConsole()
+{
+	document.getElementById("FreezeButton").innerHTML = freezed?"Freeze":"Unfreeze";
+	freezed = !freezed;
+}
 </script>
 
 </head>
 <body onload="javascript:OnLoad()">
+   	<div class="consoleButtons">
+	<button id="ClearButton" onclick="javascript:OnLoad:ClearConsole()">Clear</button>
+	<br>
+	<button id="FreezeButton" onclick="javascript:OnLoad:FreezeConsole()">Freeze</button>
+	</div>
     <div id="messages"></div>
     <div id="system"></div>
 </body>
