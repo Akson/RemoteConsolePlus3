@@ -65,6 +65,22 @@
             {
                 "destinationIdx": 2,
                 "sourceIdx": 16
+            },
+            {
+                "destinationIdx": 19,
+                "sourceIdx": 17
+            },
+            {
+                "destinationIdx": 20,
+                "sourceIdx": 18
+            },
+            {
+                "destinationIdx": 18,
+                "sourceIdx": 19
+            },
+            {
+                "destinationIdx": 3,
+                "sourceIdx": 20
             }
         ],
         "Nodes": [
@@ -252,8 +268,8 @@
                 "NodeClass": "HubMessageProcessingNode",
                 "NodeParameters": {
                     "position": [
-                        671,
-                        442
+                        915,
+                        455
                     ]
                 }
             },
@@ -291,6 +307,56 @@
                         383
                     ],
                     "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "OpenCLBuildInfo"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        29,
+                        133
+                    ],
+                    "text": "RcpStream: [u'OpenCLBuildInfo']"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.HtmlFormatting.OpenCLBuildInfo2Html",
+                    "position": [
+                        393,
+                        127
+                    ],
+                    "text": "OpenCLBuildInfo2Html"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        204,
+                        130
+                    ],
+                    "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "HubMessageProcessingNode",
+                "NodeParameters": {
+                    "position": [
+                        901,
+                        125
+                    ]
                 }
             }
         ]

@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 
 <style type="text/css">
-pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+pre {display:inline-block; }
+pre.messageText {display:inline-block; margin:0px}
+pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:none;}
 .string { color: green; }
 .number { color: darkorange; }
 .boolean { color: blue; }
@@ -67,11 +69,10 @@ function ProcessIncomingMessage(evt)
 	//console.log("onmessage", message);
 	
 	messageHtml = message.Data;
-	messageHtml += '<a href="javascript:void(0)" onclick="$(this).next().slideToggle(100);" >*</a>'
-	messageHtml += '<pre style="display:none;">';
+	messageHtml += '<a href="javascript:void(0)" onclick="$(this).next().next().slideToggle(100);" >*</a><br>'
+	messageHtml += '<pre class="messageInfo">';
 	messageHtml += syntaxHighlight(message.Info);
 	messageHtml += "</pre>";
-	messageHtml += "<br>";
 	
     messages.push(messageHtml);
     if(messages.length > 100)

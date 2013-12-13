@@ -32,7 +32,9 @@ class Backend(object):
         """
         processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
 
-        data = '<pre class="messageText">'+str(message["Data"])+'</pre>'
+        data = '<pre style="outline: 1px solid #ccc; padding: 5px; margin: 5px;">'+str(message["Data"])+'</pre>'
+        #data = data.replace(" ", "&nbsp;")
+        #data = data.replace("\n", "<br>")
         processedMessage["Data"] = data 
 
         self._parentNode.SendMessage(processedMessage)
