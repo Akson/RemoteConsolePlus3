@@ -1,8 +1,4 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
-import logging
-import json
-import struct
-import numpy as np
 from RCP3 import DefaultParser
 
 class Backend(object):

@@ -78,7 +78,7 @@ def RunWebSocketsServer(proxyInputqueue):
     app = tornado.web.Application([
         (r'/OutputConsole/', IndexHandler),
         (r'/WebSockets/', WebSocketHandler),
-    ], debug=True)
+    ], debug=False)
     
     app.listen(Config["Web server"]["Port"])
     tornado.ioloop.IOLoop.instance().start()

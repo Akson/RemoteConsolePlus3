@@ -81,6 +81,26 @@
             {
                 "destinationIdx": 3,
                 "sourceIdx": 20
+            },
+            {
+                "destinationIdx": 22,
+                "sourceIdx": 21
+            },
+            {
+                "destinationIdx": 20,
+                "sourceIdx": 24
+            },
+            {
+                "destinationIdx": 27,
+                "sourceIdx": 25
+            },
+            {
+                "destinationIdx": 23,
+                "sourceIdx": 26
+            },
+            {
+                "destinationIdx": 26,
+                "sourceIdx": 27
             }
         ],
         "Nodes": [
@@ -167,8 +187,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.DataParsers.MatrixStreamNameParser",
                     "position": [
-                        219,
-                        189
+                        209,
+                        188
                     ],
                     "text": "MatrixStreamNameParser"
                 }
@@ -191,8 +211,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.HtmlFormatting.Matrix2HtmlTable",
                     "position": [
-                        601,
-                        183
+                        583,
+                        187
                     ],
                     "text": "Matrix2HtmlTable"
                 }
@@ -259,8 +279,8 @@
                 "NodeClass": "HubMessageProcessingNode",
                 "NodeParameters": {
                     "position": [
-                        682,
-                        325
+                        762,
+                        328
                     ]
                 }
             },
@@ -268,8 +288,8 @@
                 "NodeClass": "HubMessageProcessingNode",
                 "NodeParameters": {
                     "position": [
-                        915,
-                        455
+                        757,
+                        443
                     ]
                 }
             },
@@ -354,9 +374,103 @@
                 "NodeClass": "HubMessageProcessingNode",
                 "NodeParameters": {
                     "position": [
-                        901,
-                        125
+                        746,
+                        100
                     ]
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "_ImageOut"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        31,
+                        78
+                    ],
+                    "text": "RcpStream: [u'_ImageOut']"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.ImageDecoder",
+                    "position": [
+                        215,
+                        80
+                    ],
+                    "text": "ImageDecoder"
+                }
+            },
+            {
+                "NodeClass": "DestinationBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Destinations.ImageViewer.ImageViewer",
+                    "position": [
+                        573,
+                        24
+                    ],
+                    "text": "ImageViewer"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.HtmlFormatting.Image2Html",
+                    "position": [
+                        390,
+                        81
+                    ],
+                    "text": "Image2Html"
+                }
+            },
+            {
+                "NodeClass": "SourceBackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "serverAddress": "tcp://localhost:55559",
+                        "streamsList": [
+                            "ImageViewer"
+                        ]
+                    },
+                    "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
+                    "position": [
+                        34,
+                        19
+                    ],
+                    "text": "RcpStream: [u'ImageViewer']"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.ImageDecoder",
+                    "position": [
+                        380,
+                        21
+                    ],
+                    "text": "ImageDecoder"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        209,
+                        20
+                    ],
+                    "text": "DefaultParser"
                 }
             }
         ]

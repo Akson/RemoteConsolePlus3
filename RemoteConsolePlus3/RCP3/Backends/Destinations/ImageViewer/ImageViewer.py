@@ -1,16 +1,24 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
 import wx
 from RCP3.OutputWindowsContainer import OutputWindowsContainer
+import cv2
 
-class ImageViewer(wx.Panel):
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+class ImageViewer(wx.Frame):
+    def __init__(self):
+        wx.Frame.__init__(self, 
+                          None, 
+                          id=wx.ID_ANY, 
+                          title="RCP Image viewer")                          
 
         self.bmp = None
         self.width = 0
         self.height = 0
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
+        self.Bind(wx.EVT_CLOSE, self.OnClose)
+
+    def OnClose(self, event):
+        self.Hide()
 
     def OnPaint(self, evt):
         dc = wx.BufferedPaintDC(self)
@@ -19,6 +27,7 @@ class ImageViewer(wx.Panel):
 
     def SetImage(self, img):
         height, width = img.shape[:2]
+        self.SetSize((width, height))
         if self.bmp == None or self.height != height or self.width != width:
             self.height = height
             self.width = width
@@ -35,11 +44,10 @@ class Backend(object):
 
     def ShowWindow(self):
         if self._imageViewer == None:
-            self._imageViewer = ImageViewer(OutputWindowsContainer.Instance())
-            OutputWindowsContainer.Instance().AddNewSubWindow(self._imageViewer)
-            self._imageViewer.Bind(wx.EVT_WINDOW_DESTROY, self.OnDestroyOutputWindow)
+            self._imageViewer = ImageViewer()
+            self._imageViewer.Show()
         else:
-            OutputWindowsContainer.Instance().Show()
+            self._imageViewer.Show()
 
     def OnDestroyOutputWindow(self, event):
         self._imageViewer = None

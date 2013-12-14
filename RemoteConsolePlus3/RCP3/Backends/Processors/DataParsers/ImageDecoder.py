@@ -1,6 +1,7 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
 import cv2
 import numpy as np
+import logging
 
 class Backend(object):
     def __init__(self, parentNode):
@@ -34,7 +35,9 @@ class Backend(object):
         should be called with an appropriate message.
         """
 
-        processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
+        processedMessage = {"Stream":message["Stream"], "Info":message["Info"]}
+        
+        print message["Info"]
 
         if (not "Width" in message["Info"]) or (not "Height" in message["Info"]):
             #Try to decode image in one of standard formats
@@ -48,16 +51,20 @@ class Backend(object):
             if LineSizeInBytes != w*BytesPerPixel:
                 #We have padding bytes...
                 print w, h, BytesPerPixel, LineSizeInBytes
+                logging.error("Not implemented!!!")
                 print "Not implemented!!!"
                 processedMessage["Data"] = None
             else:
+                print message["Data"].shape
                 img = np.reshape(message["Data"], (h, w, BytesPerPixel))
                 cv2.imwrite("test.jpg", img)
                 processedMessage["Data"] = img
 
-        if img:            
+        if img != None:            
             processedMessage["Data"] = img
             self._parentNode.SendMessage(processedMessage)
+        else:
+            logging.warning("Cannot decode image")
             
     def AppendContextMenuItems(self, menu):
         """

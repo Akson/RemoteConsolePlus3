@@ -36,4 +36,4 @@ if __name__ == '__main__':
         rc.SendMessage("streamtest%d"%(i), "_TextOut")
         rc.SendMessage("teststst%d"%(i+1), "_HtmlOut")
         i+=1
-        time.sleep(1.1)
+        #time.sleep(1.1)
