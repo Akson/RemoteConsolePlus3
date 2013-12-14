@@ -26,6 +26,7 @@ class ImageViewer(wx.Frame):
             dc.DrawBitmap(self.bmp, 0, 0)
 
     def SetImage(self, img):
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         height, width = img.shape[:2]
         self.SetSize((width, height))
         if self.bmp == None or self.height != height or self.width != width:
@@ -40,7 +41,6 @@ class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
         self._imageViewer = None
-        self.ShowWindow()
 
     def ShowWindow(self):
         if self._imageViewer == None:

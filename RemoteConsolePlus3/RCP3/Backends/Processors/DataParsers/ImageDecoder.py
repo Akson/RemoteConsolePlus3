@@ -52,13 +52,10 @@ class Backend(object):
                 #We have padding bytes...
                 print w, h, BytesPerPixel, LineSizeInBytes
                 logging.error("Not implemented!!!")
-                print "Not implemented!!!"
-                processedMessage["Data"] = None
+                img = None
             else:
                 print message["Data"].shape
                 img = np.reshape(message["Data"], (h, w, BytesPerPixel))
-                cv2.imwrite("test.jpg", img)
-                processedMessage["Data"] = img
 
         if img != None:            
             processedMessage["Data"] = img

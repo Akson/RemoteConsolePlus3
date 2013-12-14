@@ -83,8 +83,12 @@
                 "sourceIdx": 20
             },
             {
-                "destinationIdx": 22,
+                "destinationIdx": 28,
                 "sourceIdx": 21
+            },
+            {
+                "destinationIdx": 24,
+                "sourceIdx": 22
             },
             {
                 "destinationIdx": 20,
@@ -101,6 +105,10 @@
             {
                 "destinationIdx": 26,
                 "sourceIdx": 27
+            },
+            {
+                "destinationIdx": 22,
+                "sourceIdx": 28
             }
         ],
         "Nodes": [
@@ -374,8 +382,8 @@
                 "NodeClass": "HubMessageProcessingNode",
                 "NodeParameters": {
                     "position": [
-                        746,
-                        100
+                        838,
+                        113
                     ]
                 }
             },
@@ -402,8 +410,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.DataParsers.ImageDecoder",
                     "position": [
-                        215,
-                        80
+                        385,
+                        73
                     ],
                     "text": "ImageDecoder"
                 }
@@ -426,8 +434,8 @@
                     "backendParameters": {},
                     "backendPath": "RCP3.Backends.Processors.HtmlFormatting.Image2Html",
                     "position": [
-                        390,
-                        81
+                        569,
+                        75
                     ],
                     "text": "Image2Html"
                 }
@@ -469,6 +477,18 @@
                     "position": [
                         209,
                         20
+                    ],
+                    "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        205,
+                        75
                     ],
                     "text": "DefaultParser"
                 }

@@ -1,4 +1,6 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
+import cv2
+from RCP3.Infrastructure import TmpFilesStorage
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
@@ -30,13 +32,14 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
-        processedMessage = dict(message)
-        print message
-
-        html = '<br><img src="http://10.0.0.7:8000/img.jpg" alt="Image should come here" width="320" height="240">'
+        processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
         
+        filePath, link = TmpFilesStorage.NewTemporaryFile("jpg")
+        print filePath
+        print link
+        cv2.imwrite(filePath, message["Data"])
+        html = '<br><img src="http://{}" alt="Image should come here">'.format(link)
         processedMessage["Data"] = html
-        processedMessage["Info"]["DataType"] = "HTML"
         
         print html
         
