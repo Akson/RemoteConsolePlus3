@@ -3,7 +3,6 @@ from RCP3.Infrastructure import WebSocketServer
 import json
 import wx
 import webbrowser
-import socket
 from RCP3.Configuration import Config
 
 class Backend(object):
@@ -43,7 +42,7 @@ class Backend(object):
 
     def OnOpenConsoleInBrowser(self, evt):
         linkDict = {}
-        linkDict["serverAddress"]=socket.gethostname()
+        linkDict["serverAddress"]=Config["Web server"]["Address"]
         linkDict["serverPort"]=Config["Web server"]["Port"]
         linkDict["streamName"]=self._streamName
 

@@ -4,6 +4,7 @@ import json
 import logging
 import traceback
 import os
+import socket
 
 """
 Configuration stores configurations for the RCP application. 
@@ -33,6 +34,7 @@ Config["Backends"] = {}
 Config["Backends"]["Thread stop waiting time (ms)"] = 200
 
 Config["Web server"] = {}
+Config["Web server"]["Address"] = socket.gethostname()
 Config["Web server"]["Port"] = 55558
 Config["Web server"]["Temporary files folder"] = os.getcwd()+"\\RCPTemp\\"
 

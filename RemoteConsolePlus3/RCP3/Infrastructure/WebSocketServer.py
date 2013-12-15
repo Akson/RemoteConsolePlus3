@@ -2,13 +2,11 @@
 import tornado.ioloop
 import tornado.websocket
 from threading import Thread
-from time import sleep
 import threading
 import json
 from Queue import Empty
 import multiprocessing.queues
 import tornado.template
-import socket
 from RCP3.Configuration import Config
 
 class Proxy(object):
@@ -52,7 +50,7 @@ class IndexHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     def get(self):
         WebSocketPathDict = {}
-        WebSocketPathDict["serverAddress"]=socket.gethostname()
+        WebSocketPathDict["serverAddress"]=Config["Web server"]["Address"]
         WebSocketPathDict["serverPort"]=Config["Web server"]["Port"]
         WebSocketPathDict["streamName"]=self.get_argument("streamName")
         
@@ -79,7 +77,7 @@ def RunWebSocketsServer(proxyInputqueue):
         (r'/Tmp/(.*)', tornado.web.StaticFileHandler, {'path': Config["Web server"]["Temporary files folder"]}),
         (r'/OutputConsole/', IndexHandler),
         (r'/WebSockets/', WebSocketHandler),
-    ], debug=True)
+    ], debug=False)
     
     app.listen(Config["Web server"]["Port"])
     tornado.ioloop.IOLoop.instance().start()
