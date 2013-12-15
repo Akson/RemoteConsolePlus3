@@ -79,7 +79,7 @@ def RunWebSocketsServer(proxyInputqueue):
         (r'/Tmp/(.*)', tornado.web.StaticFileHandler, {'path': Config["Web server"]["Temporary files folder"]}),
         (r'/OutputConsole/', IndexHandler),
         (r'/WebSockets/', WebSocketHandler),
-    ], debug=False)
+    ], debug=True)
     
     app.listen(Config["Web server"]["Port"])
     tornado.ioloop.IOLoop.instance().start()

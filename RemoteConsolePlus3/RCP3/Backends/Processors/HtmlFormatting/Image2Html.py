@@ -38,7 +38,7 @@ class Backend(object):
         print filePath
         print link
         cv2.imwrite(filePath, message["Data"])
-        html = '<br><img src="http://{}" alt="Image should come here">'.format(link)
+        html = '<img src="http://{}" alt="Image should come here">'.format(link)
         processedMessage["Data"] = html
         
         print html

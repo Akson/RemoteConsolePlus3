@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 
 <style type="text/css">
-pre {display:inline-block; font-family: Consolas,monospace}
-pre.messageText {display:inline-block; margin:0px; font-family: Consolas,monospace}
-pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:none;}
+pre {font-family: Consolas,monospace}
+pre.messageText {display:inline-block; margin:0px;}
+pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:none;margin-bottom: 15px;}
 .string { color: green; }
 .number { color: darkorange; }
 .boolean { color: blue; }
@@ -29,7 +29,7 @@ pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:non
 var messages = [];
 var needUpdate = false;
 var reconnectingTimer = undefined;
-var freezed = false;
+var paused = false;
 
 function syntaxHighlight(json) {
     if (typeof json != 'string') {
@@ -53,72 +53,69 @@ function syntaxHighlight(json) {
     });
 }
 
-function RenderMessages()
-{
-	if(needUpdate && !freezed)
-	{
-        document.getElementById("messages").innerHTML = messages.join("");
-		window.scrollTo(0,document.body.scrollHeight);
-		needUpdate = false;
-	}
-}
-
-function ProcessIncomingMessage(evt)
-{
-	message = JSON.parse(evt.data);
-	//console.log("onmessage", message);
-	
+function GenerateMessageHtml(message){
 	messageHtml = message.Data;
-	messageHtml += '<a href="javascript:void(0)" onclick="$(this).next().next().slideToggle(100);" >*</a><br>'
+	messageHtml += '<a href="javascript:void(0)" onclick="$(this).next().slideToggle(100);" >&#8744;</a>'
 	messageHtml += '<pre class="messageInfo">';
 	messageHtml += syntaxHighlight(message.Info);
 	messageHtml += "</pre>";
-	
-    messages.push(messageHtml);
-    if(messages.length > 100)
-    	messages.shift();
-    
-    needUpdate = true;
+	return messageHtml
 }
-function Connect()
-{
+
+function ProcessIncomingMessage(evt){
+	if(paused == true)
+		return;
+	
+	message = JSON.parse(evt.data);
+	messageHtml = GenerateMessageHtml(message);
+	
+	messageDiv = $('<div class="messageContainer">').html(messageHtml).appendTo(document.getElementById("messages"))
+	
+    messages.push(messageDiv);
+    if(messages.length > 50){
+    	first = messages.shift();
+    	first.remove();
+    	delete(first); 
+    }
+    
+    window.scrollTo(0,document.body.scrollHeight);
+}
+function Connect(){
     var ws = new WebSocket("{{WebSocketPath}}");
     ws.onmessage = ProcessIncomingMessage
     document.getElementById("system").innerHTML = "";
-    ws.onclose = function() 
-    { 
+    ws.onclose = function(){ 
         document.getElementById("system").innerHTML = "<br>Disconnected. Reconnectiong...";
         window.scrollTo(0,document.body.scrollHeight);
         reconnectingTimer = window.setInterval("javascript:Reconnect()",1000);
     };
 }
-function Reconnect()
-{
+function Reconnect(){
 	Connect();
 	window.clearInterval(reconnectingTimer)
 }
-function OnLoad() 
-{
+function OnLoad(){
     if ("WebSocket" in window) 
     {
-        document.getElementById("messages").innerHTML = "WebSocket is supported by your Browser! Waiting for incoming messages...";
+        messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
         Connect();
-        window.setInterval("javascript:RenderMessages()",50);
 	} 
     else 
     {
-        document.getElementById("messages").innerHTML = "WebSocket NOT supported by your Browser!";
+        document.getElementById("system").innerHTML = "WebSocket NOT supported by your Browser!";
     }
 }
-function ClearConsole()
-{
+function ClearConsole(){
+	messages.forEach(function(msgDive){
+		msgDive.remove();
+		delete(first);
+	});
 	messages = [];
-	needUpdate = true;
+	document.getElementById("messages").innerHTML = "";
 }
-function FreezeConsole()
-{
-	document.getElementById("FreezeButton").innerHTML = freezed?"Freeze":"Unfreeze";
-	freezed = !freezed;
+function FreezeConsole(){
+	document.getElementById("FreezeButton").innerHTML = paused?"Pause":"Run";
+	paused = !paused;
 }
 </script>
 
@@ -127,9 +124,9 @@ function FreezeConsole()
    	<div class="consoleButtons">
 	<button id="ClearButton" onclick="javascript:OnLoad:ClearConsole()">Clear</button>
 	<br>
-	<button id="FreezeButton" onclick="javascript:OnLoad:FreezeConsole()">Freeze</button>
+	<button id="FreezeButton" onclick="javascript:OnLoad:FreezeConsole()">Pause</button>
 	</div>
-    <div id="messages"></div>
+    <div id="messages" style="font-family: Consolas,monospace;"></div>
     <div id="system"></div>
 </body>
 </html>
