@@ -70,14 +70,14 @@ function ProcessIncomingMessage(evt){
 	messageHtml = GenerateMessageHtml(message);
 	
 	messageDiv = $('<div class="messageContainer">').html(messageHtml).appendTo(document.getElementById("messages"))
-	
     messages.push(messageDiv);
-    if(messages.length > 50){
-    	first = messages.shift();
-    	first.remove();
-    	delete(first); 
+    if(messages.length > 2000){
+    	for (var i=0; i<1000; i++){
+        	first = messages.shift();
+        	first.remove();
+        	delete(first); 
+    	}
     }
-    
     window.scrollTo(0,document.body.scrollHeight);
 }
 function Connect(){
