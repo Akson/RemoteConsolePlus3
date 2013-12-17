@@ -32,7 +32,7 @@ class Backend(object):
         """
         processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
 
-        data = "<i>" + message["Info"]["VariableName"] + "</i> = " + message["Data"]
+        data = "<i>" + message["Info"]["VariableName"] + "</i> = " + str(message["Data"])
         
         processedMessage["Data"] = data 
 
