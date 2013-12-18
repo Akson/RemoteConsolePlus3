@@ -16,7 +16,13 @@ class ImageViewer(wx.Frame):
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 
+    def OnEraseBackground(self, evt):
+        dc = evt.GetDC()
+        if not dc:
+            dc = wx.ClientDC(self)
+            
     def OnClose(self, event):
         self.Hide()
 
