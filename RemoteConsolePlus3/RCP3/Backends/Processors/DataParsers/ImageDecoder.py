@@ -41,6 +41,8 @@ class Backend(object):
 
         if (not "Width" in message["Info"]) or (not "Height" in message["Info"]):
             #Try to decode image in one of standard formats
+            print "Try to decode compressed image"
+            print message["Data"]
             img = cv2.imdecode(np.frombuffer(message["Data"], dtype=np.uint8), -1)
         else:
             w = int(message["Info"]["Width"])
