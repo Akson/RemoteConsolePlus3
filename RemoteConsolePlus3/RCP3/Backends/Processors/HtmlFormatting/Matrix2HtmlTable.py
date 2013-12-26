@@ -34,12 +34,11 @@ class Backend(object):
         processedMessage = dict(message)
         
         if len(message["Data"].shape) == 2:
-            matrixName = message["Stream"]
-            if matrixName.find("MatrixPrinter") == 0:
-                matrixName = matrixName[14:]  
+            matrixName = message["Info"].get("VariableName", None)
             
             html = '<table border="1" style="display:inline-block">'
-            html+= '<caption>'+matrixName+'</caption>'
+            if matrixName:
+                html+= '<caption>'+matrixName+'</caption>'
             
             columnWidthPercent = math.floor(100/message["Data"].shape[1])
             

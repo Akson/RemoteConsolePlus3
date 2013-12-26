@@ -107,5 +107,6 @@ class Backend(object):
         if infoString != "":
             parsedMessage["Info"] = json.loads(infoString)
         parsedMessage["Info"]["ServerTimeStampMsSince1970"] = int(time.time()*1000)
+        parsedMessage["Info"]["Stream"] = parsedMessage["Stream"]
         
         self._parentNode.SendMessage(parsedMessage)

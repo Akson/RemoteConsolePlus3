@@ -69,6 +69,7 @@ class Backend(object):
         update object parameters accordingly
         """
         self._allowedProcessingSequence = parameters.get("allowedProcessingSequence", "")
+        self.text = self._allowedProcessingSequence
     
     def ProcessMessage(self, message):
         """
@@ -77,7 +78,7 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
-        if message["Info"].get("ProcessingSequence", "_Text") == self._allowedProcessingSequence:
+        if message["Info"].get("ProcessingSequence", None) == self._allowedProcessingSequence:
             self._parentNode.SendMessage(message)
         
     def AppendContextMenuItems(self, menu):

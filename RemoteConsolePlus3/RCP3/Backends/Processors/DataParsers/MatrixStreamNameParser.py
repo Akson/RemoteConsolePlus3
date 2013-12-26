@@ -35,24 +35,18 @@ class Backend(object):
         
         processedMessage = dict(message)
         
-        stream = message["Stream"]
-        if stream.find("MatrixPrinter") == 0:
-            components = stream.split("/")
-            
-            if len(components)>1:
-                formatDescriptionString = components[-1]
-                if formatDescriptionString[0] == "#":
-                    formatDescriptionString = formatDescriptionString[1:]
-                    #find the last digit and split stream name around it
-                    reResult = re.search("\d", formatDescriptionString[::-1])
-                    p = len(formatDescriptionString) - reResult.start() 
-                    
-                    processedMessage["Info"]["Dimensions"] = formatDescriptionString[:p] 
-                    processedMessage["Info"]["BinaryDataFormat"] = formatDescriptionString[p:]
-                    
-                    processedMessage["Stream"] = "/".join(components[:-1])
-        
-            self._parentNode.SendMessage(processedMessage)
+        if "MatrixDescription" in message["Info"]:
+            formatDescriptionString = message["Info"]["MatrixDescription"]
+            if formatDescriptionString[0] == "#":
+                formatDescriptionString = formatDescriptionString[1:]
+                #find the last digit and split stream name around it
+                reResult = re.search("\d", formatDescriptionString[::-1])
+                p = len(formatDescriptionString) - reResult.start() 
+                
+                processedMessage["Info"]["Dimensions"] = formatDescriptionString[:p] 
+                processedMessage["Info"]["BinaryDataFormat"] = formatDescriptionString[p:]
+    
+        self._parentNode.SendMessage(processedMessage)
         
     def AppendContextMenuItems(self, menu):
         """
