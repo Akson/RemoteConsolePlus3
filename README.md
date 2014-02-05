@@ -8,6 +8,7 @@ Dependencies:<br>
 2) PyZmq 14.0.1<br>
 3) WxPython 2.8 32bit unicode (wxPython2.8-win32-unicode-py27)<br>
 4) NumPy 1.8.0 (1.6.2 also works)<br>
+5) PyOpenCV<br>
 <br>
 It was tested on Windows 7(x64) with these dependencies.<br>
 It was also tested on 8(x64), 8.1(x64) with similar dependecnies.<br>
