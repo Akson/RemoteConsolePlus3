@@ -25,18 +25,14 @@ class DefaultNodesFactory(NodesFactoryInterface):
             logging.debug("This class is not supported")
             return None 
 
-        try:
-            nodeClass = self.supportedClasses[nodeDescription["NodeClass"]]
-            node = nodeClass()
-                
-            if "NodeParameters" in nodeDescription:
-                if type(nodeDescription["NodeParameters"]) == dict:
-                    node.LoadObjectFromDict(nodeDescription["NodeParameters"])
-                else:
-                    logging.warning("NodeParameters should be a dictionary")
-        except:
-            logging.error(traceback.format_exc())
-            return None
+        nodeClass = self.supportedClasses[nodeDescription["NodeClass"]]
+        node = nodeClass()
+            
+        if "NodeParameters" in nodeDescription:
+            if type(nodeDescription["NodeParameters"]) == dict:
+                node.LoadObjectFromDict(nodeDescription["NodeParameters"])
+            else:
+                logging.warning("NodeParameters should be a dictionary")
         
         return node
         
