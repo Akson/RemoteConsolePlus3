@@ -116,7 +116,7 @@ class MessageProcessingGraphWindow(wx.Frame):
             f.close()
         except:
             logging.error("Cannot save console to file: "+fileName)
-            logging.debug(traceback.format_exc())
+            logging.error(traceback.format_exc())
 
     def LoadFile(self, fileName):
         try:
@@ -126,7 +126,7 @@ class MessageProcessingGraphWindow(wx.Frame):
             f.close()
         except:
             logging.error("Cannot load console from file: "+fileName)
-            logging.debug(traceback.format_exc())
+            logging.error(traceback.format_exc())
 
     def OnClose(self, event):
         if OutputWindowsContainer.Instance().IsShown():
