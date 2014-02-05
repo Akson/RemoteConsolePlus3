@@ -1,6 +1,7 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson/MoveMe)
 from MoveMe.Canvas.Factories.NodesFactoryInterface import NodesFactoryInterface
 import logging
+import traceback
 
 class DefaultNodesFactory(NodesFactoryInterface):
     def __init__(self, supportedClassesList = []):
@@ -25,7 +26,11 @@ class DefaultNodesFactory(NodesFactoryInterface):
             return None 
 
         nodeClass = self.supportedClasses[nodeDescription["NodeClass"]]
-        node = nodeClass()
+        try:
+            node = nodeClass()
+        except:
+            logging.error(traceback.format_exc())
+            return None
             
         if "NodeParameters" in nodeDescription:
             if type(nodeDescription["NodeParameters"]) == dict:
