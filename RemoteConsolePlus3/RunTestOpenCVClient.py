@@ -36,7 +36,7 @@ import numpy as np
 if __name__ == '__main__':
     print "Running test client..."
     rc = RCP2Client()
-    rc.Connect("tcp://127.0.0.1:55557")
+    rc.Connect("tcp://localhost:55557")
 
     capture = cv2.VideoCapture(0)
     
@@ -52,14 +52,14 @@ if __name__ == '__main__':
 
         rc.SendMessage("Sending image...")
         info = {"DataType":"Binary", "BinaryDataFormat":"B", "Dimensions":str(frame.shape)}
-        rc.SendMessage(json.dumps({"Value":info}), "TextHtml", {"DataType":"JSON"})
+        rc.SendMessage(json.dumps({"Value":info}), "#", {"DataType":"JSON"})
         #rc.SendMessage(frame.tostring(), "@ImageViewer", info)
 
-        info = {"DataType":"IMAGE", "Dimensions":str(frame.shape)}
+        info = {"ProcessingSequence":"_Image"}
         ret, buf = cv2.imencode(".jpg", frame)
         print buf.shape
         bufStr = buf.tostring()
-        rc.SendMessage(buf.tostring(), "@ImageViewer", info)
+        rc.SendMessage(buf.tostring(), "#", info)
 
         i+=1
         time.sleep(1.5)

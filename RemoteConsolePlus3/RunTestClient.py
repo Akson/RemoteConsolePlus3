@@ -19,6 +19,7 @@ class RCP2Client(object):
 
         additionalInfo = dict()
         additionalInfo["TimeStamp"] = int(time.time()*1000)
+        additionalInfo["ProcessingSequence"] = "_Text" 
         if commands!=None: additionalInfo["Commands"] = commands
         
         message = "%s%c%s%c%s"%(streamName, chr(0), json.dumps(additionalInfo), chr(0), str(value))
@@ -29,11 +30,11 @@ class RCP2Client(object):
 if __name__ == '__main__':
     print "Running test client..."
     rc = RCP2Client()
-    rc.Connect("tcp://127.0.0.1:55557")
+    rc.Connect("tcp://localhost:55557")
     
     i=0
     while True:
-        rc.SendMessage("streamtest%d"%(i), "_TextOut")
-        rc.SendMessage("teststst%d"%(i+1), "_HtmlOut")
+        rc.SendMessage("streamtest%d"%(i), "#")
+        rc.SendMessage("teststst%d"%(i+1), "#")
         i+=1
-        #time.sleep(1.1)
+        time.sleep(0.51)
