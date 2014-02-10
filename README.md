@@ -19,7 +19,11 @@ It's a 3rd version of a tool for real time debugging data visualization. This ve
 <li>Tornado 3.2 (Run "easy_install tornado" from "C:\Python27\Scripts\" or your Python location))</li>
 <li>WxPython 2.8 32bit unicode (Download and run "wxPython2.8-win32-unicode-py27" from http://downloads.sourceforge.net/wxpython/wxPython2.8-win32-unicode-2.8.12.1-py27.exe)</li>
 <li>NumPy 1.8.0 (1.6.2 also works) (Download and run "numpy-1.8.0-win32-superpack-python2.7" from: http://sourceforge.net/projects/numpy/files/NumPy/1.8.0/numpy-1.8.0-win32-superpack-python2.7.exe/download)</li>
-<li>OpenCV 2.4 with Python binding (Copy "cv2.pyd" from "C:\opencv\build\python\x86\2.7\" to "C:\Python27\Lib\site-packages\" or to "RemoteConsolePlus3\RemoteConsolePlus3")</li>
+<li>OpenCV 2.4 with Python binding
+<ol>
+<li>Install OpenCV from "http://opencv.org/downloads.html"</li>
+<li>Copy "cv2.pyd" from "C:\opencv\build\python\x86\2.7\" to "C:\Python27\Lib\site-packages\" or to "RemoteConsolePlus3\RemoteConsolePlus3"</li>
+</ol></li>
 </ol>
 It was tested on Windows 7(x64) with these dependencies.<br>
 It was also tested on 8(x64), 8.1(x64) with similar dependecnies.<br>
