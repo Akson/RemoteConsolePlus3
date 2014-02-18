@@ -5,25 +5,31 @@ import traceback
 from multiprocessing import Process
 from RCP3.Infrastructure import WebSocketServer
 from threading import Thread
-sys.path.append('..\MoveMe')#MoveMe should live near RCP
 import subprocess
 import wx
 import logging
 from RCP3.MessageProcessingGraphWindow import MessageProcessingGraphWindow
 import RCP3.Configuration
 import multiprocessing.queues
+from RCP3.Infrastructure.StreamsCollector import StreamsCollector
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
     
     #We try to run a new router, if another router is already running, it will throw an exception but it's ok
     routerProcess = subprocess.Popen(['python', 'RunRouter.py'])
-    
-    #Run websocket server
+
+    print "Run streams collector"    
+    sc = StreamsCollector("tcp://localhost:55559")
+    p1 = Thread(target=StreamsCollector.Run, args=(sc,))
+    p1.start()
+
+    print "Run websocket server"
     WebSocketServer.proxyQueue = multiprocessing.queues.Queue(1024)
-    p = Thread(target=WebSocketServer.RunWebSocketsServer, args=(WebSocketServer.proxyQueue,))
+    p = Thread(target=WebSocketServer.RunWebSocketsServer, args=(WebSocketServer.proxyQueue, sc,))
     p.start()
     
+    print "Run wx application"
     try:
         app = wx.PySimpleApp()
     

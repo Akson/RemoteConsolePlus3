@@ -1,0 +1,43 @@
+{
+    "Application ID": "RemoteConsole+ v3",
+    "Backends": {
+        "Thread stop waiting time (ms)": 200
+    },
+    "UI behavior": {
+        "Ask before exit": false,
+        "Message processing graph window": {
+            "Show on start": true,
+            "Window position": [
+                0,
+                0
+            ],
+            "Window size": [
+                640,
+                480
+            ]
+        },
+        "Output windows container": {
+            "Show after adding new window": false,
+            "Show on start": false,
+            "Window position": [
+                0,
+                480
+            ],
+            "Window size": [
+                640,
+                480
+            ]
+        }
+    },
+    "Web server": {
+        "Address": "lena",
+        "Port": 55558,
+        "Temporary files folder": "C:\\_Programming\\_Git\\RemoteConsolePlus3\\RemoteConsolePlus3\\RCPTemp\\"
+    },
+    "ZMQ": {
+        "Router input address": "*",
+        "Router input port": 55557,
+        "Router output address": "*",
+        "Router output port": 55559
+    }
+}

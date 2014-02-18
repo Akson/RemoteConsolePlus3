@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="../Static/dist/themes/default/style.min.css" />
+<link rel="stylesheet" href="../Static/dist/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
+
+<script src="../Static/dist/libs/jquery.js"></script>
+<script src="../Static/dist/libs/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="../Static/dist/jstree.min.js"></script>
+
+<script>
+$(function() {
+	$('#jstree').jstree({
+		'core' : {
+			'data' : {
+				'url' : 'GetTree',
+				'data' : function (node) {
+					return { 'id' : node.id };
+				}
+			}
+		},
+		'plugins' : ["json_data", "checkbox"]
+	});
+	$('#Refresh').on('click', function () {
+		$('#jstree').jstree('refresh');
+	});
+	
+	$( "#dialog" ).dialog({
+	      resizable: true,
+	      height:540,
+	      width:300,
+	      autoOpen: false,
+	      show: {
+	        effect: "clip",
+	        duration: 300
+	      },
+	      hide: {
+	        effect: "clip",
+	        duration: 300
+	      }
+	    });
+	
+	$( "#opener" ).click(function() {
+	      $( "#dialog" ).dialog( "open" );
+	    });
+});
+</script>
+
+
+</head>
+<body>
+<button id="opener">Open Dialog</button>
+
+<div id="dialog" title="Streams tree">
+<button id="Refresh">Refresh</button>
+<div id="jstree"></div>
+</div>
+
+</body>
+</html>

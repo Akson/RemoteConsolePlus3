@@ -8,6 +8,8 @@ from Queue import Empty
 import multiprocessing.queues
 import tornado.template
 from RCP3.Configuration import Config
+from random import randint
+import random
 
 class Proxy(object):
     _clientsConnectedToStreams = {}
@@ -47,6 +49,7 @@ class Proxy(object):
                 pass
 
 class IndexHandler(tornado.web.RequestHandler):
+    _streamCollector = None
     @tornado.web.asynchronous
     def get(self):
         WebSocketPathDict = {}
@@ -56,6 +59,39 @@ class IndexHandler(tornado.web.RequestHandler):
         
         WebSocketPath = "ws://{serverAddress}:{serverPort}/WebSockets/?streamName={streamName}".format(**WebSocketPathDict)
         self.render("TestWebSockets.html", WebSocketPath=WebSocketPath)
+                
+class StreamsTreeRequestHandler(tornado.web.RequestHandler):
+    _streamCollector = None
+    _currentTree = {'text':'root', 'children':[], 'id':'root'}
+
+    def CreateNewRandomTreeNode(self):
+        rnadStr = 'node'+str(randint(0, 10000))
+        return {'text':rnadStr, 'children':[], 'id':rnadStr}
+
+    def GrowTree(self, newNodesNumber = 1):
+        for i in range(newNodesNumber):
+            curNode = StreamsTreeRequestHandler._currentTree
+            while len(curNode['children']) > 0:
+                if random.random()<(1.0/len(curNode['children'])):
+                    break
+                curNode = curNode['children'][randint(0, len(curNode['children'])-1)]
+            curNode['children'].append(self.CreateNewRandomTreeNode())
+    
+    @tornado.web.asynchronous
+    def get(self, params):
+        print "tree requested", params
+        if params == "":
+            self.render("StreamsTreeViewer.html")
+        else:
+            streamsTree = StreamsTreeRequestHandler._streamCollector.GetStreamsTree()
+            print json.dumps(streamsTree)
+            self.GrowTree(10)
+            self.set_header("Content-Type", 'application/json')
+            self.write(json.dumps(StreamsTreeRequestHandler._currentTree))
+            print json.dumps(StreamsTreeRequestHandler._currentTree)
+            #self.write('<ul><li>Node 1</li><li class="jstree-closed">Node 2</li></ul>')
+            self.flush()
+            self.finish()
                 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self, *args):
@@ -68,16 +104,21 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print "close"
         Proxy.UnRegisterStreamListener(self._streamName, self)
 
-def RunWebSocketsServer(proxyInputqueue):
+def RunWebSocketsServer(proxyInputqueue, streamCollector):
     print "RunWebSocketsServer..."
+    StreamsTreeRequestHandler._streamCollector = streamCollector
+    
     thread = Thread(target = Proxy.ProxyThreadFunction, args = (proxyInputqueue, ))
     thread.start()
     
     app = tornado.web.Application([
+        (r'/Static/(.*)', tornado.web.StaticFileHandler, {'path': "./RCP3/Infrastructure/Static"}),
         (r'/Tmp/(.*)', tornado.web.StaticFileHandler, {'path': Config["Web server"]["Temporary files folder"]}),
         (r'/OutputConsole/', IndexHandler),
+        (r'/StreamsTree/(.*)', StreamsTreeRequestHandler),
         (r'/WebSockets/', WebSocketHandler),
-    ], debug=False)
+        
+    ], debug=True)
     
     app.listen(Config["Web server"]["Port"])
     tornado.ioloop.IOLoop.instance().start()

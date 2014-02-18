@@ -38,6 +38,11 @@ Config["Web server"]["Address"] = socket.gethostname()
 Config["Web server"]["Port"] = 55558
 Config["Web server"]["Temporary files folder"] = os.getcwd()+"\\RCPTemp\\"
 
+Config["ZMQ"] = {}
+Config["ZMQ"]["Router input address"] = "*"
+Config["ZMQ"]["Router input port"] = 55557
+Config["ZMQ"]["Router output address"] = "*"
+Config["ZMQ"]["Router output port"] = 55559
 
 
 """
