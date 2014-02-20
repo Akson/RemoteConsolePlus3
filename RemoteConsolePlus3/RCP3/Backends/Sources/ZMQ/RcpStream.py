@@ -73,7 +73,7 @@ class Backend(object):
             if self._reconnectToServer:
                 try:
                     socket = zmq.Context.instance().socket(zmq.SUB)
-                    socket.connect(self._serverAddress)
+                    socket.bind(self._serverAddress)
                     for streamName in self._streamsList:
                         socket.setsockopt(zmq.SUBSCRIBE, str(streamName))
                     self._reconnectToServer = False

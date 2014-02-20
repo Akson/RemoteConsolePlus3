@@ -35,6 +35,7 @@ class StreamsCollector(object):
                     message = self._inputSocket.recv()
                     streamName = message[:message.find(chr(0))]
                     self.ProcessStreamname(streamName)
+                    print streamName
                 except zmq.ZMQError, e:
                     print e
                     time.sleep(0.001)

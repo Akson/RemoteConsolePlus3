@@ -463,7 +463,7 @@
                 "NodeClass": "SourceBackendNode",
                 "NodeParameters": {
                     "backendParameters": {
-                        "serverAddress": "tcp://localhost:55559",
+                        "serverAddress": "tcp://*:55557",
                         "streamsList": [
                             "#"
                         ]

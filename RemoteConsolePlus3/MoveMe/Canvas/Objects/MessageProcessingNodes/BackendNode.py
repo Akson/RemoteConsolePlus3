@@ -21,7 +21,6 @@ class BackendNode(BaseMessageProcessingNode):
         if self._backendObject:
             self.backendPath = backendPath
             self.text = backendPath.split(".")[-1]
-            print type(self._backendObject)
             if hasattr(self._backendObject, "text"):
                 if self._backendObject.text:
                     self.text = backendPath.split(".")[-1]+": " + self._backendObject.text
