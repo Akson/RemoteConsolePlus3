@@ -5,6 +5,7 @@ import time
 
 import collections
 import json
+import traceback
 
 def Tree():
     return collections.defaultdict(Tree)
@@ -27,14 +28,18 @@ class StreamsCollector(object):
         self._root = Tree()
 
     def Run(self):
-        while True:
-            try:
-                message = self._inputSocket.recv()
-                streamName = message[:message.find(chr(0))]
-                self.ProcessStreamname(streamName)
-            except zmq.ZMQError, e:
-                print e
-                time.sleep(0.001)
+        try:
+            print "Running streams collector on: "+self._routerAddress    
+            while True:
+                try:
+                    message = self._inputSocket.recv()
+                    streamName = message[:message.find(chr(0))]
+                    self.ProcessStreamname(streamName)
+                except zmq.ZMQError, e:
+                    print e
+                    time.sleep(0.001)
+        except:
+            print traceback.format_exc()
 
     def ProcessStreamname(self, rawStreamName):
         #print rawStreamName

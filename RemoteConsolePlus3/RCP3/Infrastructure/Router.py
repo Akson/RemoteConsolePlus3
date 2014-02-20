@@ -1,6 +1,7 @@
 '''Created by Dmytro Konobrytskyi, 2012(C)'''
 
 import zmq
+import traceback
 
 class Router(object):
     def __init__(self, inputAddress, outputAddress):
@@ -22,5 +23,9 @@ class Router(object):
         self._outputSocket.bind(self._outputAddress)
 
     def Run(self):
-        print "Running router: "+self._inputAddress+" -> "+self._outputAddress
-        zmq.proxy(self._inputSocket, self._outputSocket, None)
+        try:
+            print "Running router: "+self._inputAddress+" -> "+self._outputAddress
+            zmq.proxy(self._inputSocket, self._outputSocket, None)
+        except:
+            print traceback.format_exc()
+            print "Probably another router is already running."

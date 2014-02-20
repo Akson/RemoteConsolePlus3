@@ -10,6 +10,7 @@ import tornado.template
 from RCP3.Configuration import Config
 from random import randint
 import random
+import traceback
 
 class Proxy(object):
     _clientsConnectedToStreams = {}
@@ -104,25 +105,28 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print "close"
         Proxy.UnRegisterStreamListener(self._streamName, self)
 
-def RunWebSocketsServer(proxyInputqueue, streamCollector):
-    print "RunWebSocketsServer..."
-    StreamsTreeRequestHandler._streamCollector = streamCollector
-    
-    thread = Thread(target = Proxy.ProxyThreadFunction, args = (proxyInputqueue, ))
-    thread.start()
-    
-    app = tornado.web.Application([
-        (r'/Static/(.*)', tornado.web.StaticFileHandler, {'path': "./RCP3/Infrastructure/Static"}),
-        (r'/Tmp/(.*)', tornado.web.StaticFileHandler, {'path': Config["Web server"]["Temporary files folder"]}),
-        (r'/OutputConsole/', IndexHandler),
-        (r'/StreamsTree/(.*)', StreamsTreeRequestHandler),
-        (r'/WebSockets/', WebSocketHandler),
+def Run(proxyInputqueue, streamCollector):
+    try:
+        print "Running websocket server on port: "+str(Config["Web server"]["Port"])
+        StreamsTreeRequestHandler._streamCollector = streamCollector
         
-    ], debug=True)
-    
-    app.listen(Config["Web server"]["Port"])
-    tornado.ioloop.IOLoop.instance().start()
-    thread.join()
+        thread = Thread(target = Proxy.ProxyThreadFunction, args = (proxyInputqueue, ))
+        thread.start()
+        
+        app = tornado.web.Application([
+            (r'/Static/(.*)', tornado.web.StaticFileHandler, {'path': "./RCP3/Infrastructure/Static"}),
+            (r'/Tmp/(.*)', tornado.web.StaticFileHandler, {'path': Config["Web server"]["Temporary files folder"]}),
+            (r'/OutputConsole/', IndexHandler),
+            (r'/StreamsTree/(.*)', StreamsTreeRequestHandler),
+            (r'/WebSockets/', WebSocketHandler),
+            
+        ], debug=True)
+        
+        app.listen(Config["Web server"]["Port"])
+        tornado.ioloop.IOLoop.instance().start()
+        thread.join()
+    except:
+        print traceback.format_exc()
     
 proxyQueue = None
     
