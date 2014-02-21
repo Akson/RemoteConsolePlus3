@@ -4,12 +4,16 @@ import json
 import wx
 import webbrowser
 from RCP3.Configuration import Config
+import zmq
 
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
         self._streamName = "DefaultConsole"
-    
+        
+        self._outcomingSocket = zmq.Context.instance().socket(zmq.PUB)
+        self._outcomingSocket.connect("tcp://localhost:"+str(Config["Web server"]["IncomingZmqPort"]))
+        
     def GetParameters(self):
         """
         Returns a dictionary with object parameters, their values, 
@@ -32,7 +36,7 @@ class Backend(object):
         'self._parentNode.SendMessage(message)'
         should be called with an appropriate message.
         """
-        WebSocketServer.proxyQueue.put(json.dumps({"StreamName":self._streamName, "Message":message}))
+        self._outcomingSocket.send(json.dumps(message))
 
     def Delete(self):
         """

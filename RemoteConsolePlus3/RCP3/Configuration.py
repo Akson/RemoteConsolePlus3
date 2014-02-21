@@ -35,14 +35,9 @@ Config["Backends"]["Thread stop waiting time (ms)"] = 200
 
 Config["Web server"] = {}
 Config["Web server"]["Address"] = socket.gethostname()
-Config["Web server"]["Port"] = 55558
+Config["Web server"]["Port"] = 55559
+Config["Web server"]["IncomingZmqPort"] = 55558
 Config["Web server"]["Temporary files folder"] = os.getcwd()+"\\RCPTemp\\"
-
-Config["ZMQ"] = {}
-Config["ZMQ"]["Router input address"] = "*"
-Config["ZMQ"]["Router input port"] = 55557
-Config["ZMQ"]["Router output address"] = "*"
-Config["ZMQ"]["Router output port"] = 55559
 
 
 """

@@ -12,45 +12,15 @@ from random import randint
 import random
 import traceback
 
-class Proxy(object):
-    _clientsConnectedToStreams = {}
-    _clientsListLock = threading.Lock()
-    
-    @staticmethod
-    def RegisterStreamListener(streamName, streamListener):
-        with Proxy._clientsListLock: 
-            if not streamName in Proxy._clientsConnectedToStreams:
-                Proxy._clientsConnectedToStreams[streamName] = []
-            Proxy._clientsConnectedToStreams[streamName].append(streamListener)
-        
-    @staticmethod
-    def UnRegisterStreamListener(streamName, streamListener):
-        with Proxy._clientsListLock: 
-            Proxy._clientsConnectedToStreams[streamName].remove(streamListener)
-        
-    @staticmethod
-    def SendMessageToClients(streamName, message):
-        if streamName not in Proxy._clientsConnectedToStreams:
-            return
-        with Proxy._clientsListLock: 
-            for client in Proxy._clientsConnectedToStreams[streamName]:
-                try:
-                    client.write_message(json.dumps(message))
-                except:
-                    pass #THIS IS A DIRTY HACK!!! TORNADO IS NOT THREAD SAFE!!!
+import zmq
 
-    @staticmethod
-    def ProxyThreadFunction(inputQueue):
-        while True:
-            try:
-                incomingObject = inputQueue.get(True, 1)
-                incomingDict = json.loads(incomingObject)
-                Proxy.SendMessageToClients(incomingDict["StreamName"], incomingDict["Message"])
-            except Empty:
-                pass
+from zmq.eventloop import ioloop
+from zmq.eventloop.zmqstream import ZMQStream
+ioloop.install()
+
+WebServerStopRequested = False
 
 class IndexHandler(tornado.web.RequestHandler):
-    _streamCollector = None
     @tornado.web.asynchronous
     def get(self):
         WebSocketPathDict = {}
@@ -62,7 +32,6 @@ class IndexHandler(tornado.web.RequestHandler):
         self.render("TestWebSockets.html", WebSocketPath=WebSocketPath)
                 
 class StreamsTreeRequestHandler(tornado.web.RequestHandler):
-    _streamCollector = None
     _currentTree = {'text':'root', 'children':[], 'id':'root'}
 
     def CreateNewRandomTreeNode(self):
@@ -96,8 +65,8 @@ class StreamsTreeRequestHandler(tornado.web.RequestHandler):
                 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self, *args):
-        print "open"
         self._streamName = self.get_argument("streamName")
+        print "open", self._streamName
         Proxy.RegisterStreamListener(self._streamName, self)
         self.stream.set_nodelay(True)
 
@@ -105,13 +74,37 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print "close"
         Proxy.UnRegisterStreamListener(self._streamName, self)
 
-def Run(proxyInputqueue, streamCollector):
-    try:
-        print "Running websocket server on port: "+str(Config["Web server"]["Port"])
-        StreamsTreeRequestHandler._streamCollector = streamCollector
+class Proxy(object):
+    _clientsConnectedToStreams = {}
+    
+    @staticmethod
+    def RegisterStreamListener(streamName, streamListener):
+        if not streamName in Proxy._clientsConnectedToStreams:
+            Proxy._clientsConnectedToStreams[streamName] = []
+        Proxy._clientsConnectedToStreams[streamName].append(streamListener)
         
-        thread = Thread(target = Proxy.ProxyThreadFunction, args = (proxyInputqueue, ))
-        thread.start()
+    @staticmethod
+    def UnRegisterStreamListener(streamName, streamListener):
+        Proxy._clientsConnectedToStreams[streamName].remove(streamListener)
+
+def OnIncomingZmqMessage(zmqMessages):
+    for zmqMessage in zmqMessages:
+        for client in Proxy._clientsConnectedToStreams["DefaultConsole"]:
+            client.write_message(zmqMessage)
+
+def CheckServerStopRequests():
+    if WebServerStopRequested:
+        tornado.ioloop.IOLoop.instance().stop() 
+        
+def Run():
+    try:
+        print "Running web server on port: "+str(Config["Web server"]["Port"])
+        
+        socket = zmq.Context.instance().socket(zmq.SUB)
+        socket.bind("tcp://*:"+str(Config["Web server"]["IncomingZmqPort"]))
+        socket.setsockopt(zmq.SUBSCRIBE, "")
+        stream = ZMQStream(socket)
+        stream.on_recv(OnIncomingZmqMessage)
         
         app = tornado.web.Application([
             (r'/Static/(.*)', tornado.web.StaticFileHandler, {'path': "./RCP3/Infrastructure/Static"}),
@@ -122,13 +115,13 @@ def Run(proxyInputqueue, streamCollector):
             
         ], debug=True)
         
+        periodic = ioloop.PeriodicCallback(CheckServerStopRequests, 500)
+        periodic.start()
+        
         app.listen(Config["Web server"]["Port"])
-        tornado.ioloop.IOLoop.instance().start()
-        thread.join()
+        tornado.ioloop.IOLoop.instance().start() 
     except:
         print traceback.format_exc()
     
-proxyQueue = None
-    
 if __name__ == '__main__':
-    RunWebSocketsServer(multiprocessing.queues.Queue())
+    Run(multiprocessing.queues.Queue())

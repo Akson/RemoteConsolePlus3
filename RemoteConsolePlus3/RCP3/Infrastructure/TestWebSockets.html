@@ -94,17 +94,6 @@ function Reconnect(){
 	Connect();
 	window.clearInterval(reconnectingTimer)
 }
-function OnLoad(){
-    if ("WebSocket" in window) 
-    {
-        messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
-        Connect();
-	} 
-    else 
-    {
-        document.getElementById("system").innerHTML = "WebSocket NOT supported by your Browser!";
-    }
-}
 function ClearConsole(){
 	messages.forEach(function(msgDive){
 		msgDive.remove();
@@ -119,8 +108,24 @@ function FreezeConsole(){
 }
 </script>
 
+<script type="text/javascript">
+$(function() {
+	$(document).ready(function() {
+	    if ("WebSocket" in window) 
+	    {
+	        messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
+	        Connect();
+		} 
+	    else 
+	    {
+	        document.getElementById("system").innerHTML = "WebSocket NOT supported by your Browser!";
+	    }
+	});
+});
+</script>
+
 </head>
-<body onload="javascript:OnLoad()">
+<body>
    	<div class="consoleButtons">
 	<button id="ClearButton" onclick="javascript:OnLoad:ClearConsole()">Clear</button>
 	<br>
