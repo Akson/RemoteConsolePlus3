@@ -22,8 +22,14 @@ pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:non
 }
 </style> 
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
-</script>
+<link rel="stylesheet" href="../Static/dist/themes/default/style.min.css" />
+<link rel="stylesheet" href="../Static/dist/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
+<link rel="stylesheet" href="../Static/dist/layout-default-latest.css" />
+
+<script src="../Static/dist/jquery-2.0.3.min.js"></script>
+<script src="../Static/dist/libs/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="../Static/dist/jquery.layout-1.3.0.min.js"></script>
+<script src="../Static/dist/jstree.min.js"></script>
         
 <script type="text/javascript">
 var messages = [];
@@ -111,6 +117,22 @@ function FreezeConsole(){
 <script type="text/javascript">
 $(function() {
 	$(document).ready(function() {
+		
+		myLayout = $('body').layout({
+			closable:					true	// pane can open & close
+		,	resizable:					true	// when open, pane can be resized 
+		,	livePaneResizing:			true
+		,	west__resizable:			true
+		,	west__minSize:				130
+		,	center__minWidth:			100
+		,	showDebugMessages:			true // log and/or display messages from debugging & testing code
+		,   onresize_end: function(){
+			SapphireClientUI.ResizeFrame();
+		}
+		});
+
+		
+		
 	    if ("WebSocket" in window) 
 	    {
 	        messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
@@ -126,6 +148,9 @@ $(function() {
 
 </head>
 <body>
+<div class="ui-layout-west">
+</div>
+<div class="ui-layout-center" >
    	<div class="consoleButtons">
 	<button id="ClearButton" onclick="javascript:OnLoad:ClearConsole()">Clear</button>
 	<br>
@@ -133,5 +158,6 @@ $(function() {
 	</div>
     <div id="messages" style="font-family: Consolas,monospace;"></div>
     <div id="system"></div>
+</div>
 </body>
 </html>
