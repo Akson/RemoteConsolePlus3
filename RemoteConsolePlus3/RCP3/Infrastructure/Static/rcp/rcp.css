@@ -1,0 +1,20 @@
+pre {font-family: Consolas,monospace}
+pre.messageText {display:inline-block; margin:0px;}
+pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:none;margin-bottom: 15px;}
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+
+.consoleButtonsPanel {
+    position:fixed;
+    top:40px;
+    right:30px;
+    align:right;
+}
+
+.consoleButtons {
+    min-height:40px;
+    width:100%;
+}

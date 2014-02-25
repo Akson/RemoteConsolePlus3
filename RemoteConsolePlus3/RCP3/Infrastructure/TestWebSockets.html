@@ -3,116 +3,16 @@
 <head>
 <meta charset="utf-8">
 
-<style type="text/css">
-pre {font-family: Consolas,monospace}
-pre.messageText {display:inline-block; margin:0px;}
-pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:none;margin-bottom: 15px;}
-.string { color: green; }
-.number { color: darkorange; }
-.boolean { color: blue; }
-.null { color: magenta; }
-.key { color: red; }
-
-.consoleButtons {
-    position:fixed;
-    top:40px;
-    right:10px;
-    height:10px;
-    align:right;
-}
-</style> 
-
 <link rel="stylesheet" href="../Static/dist/themes/default/style.min.css" />
 <link rel="stylesheet" href="../Static/dist/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
 <link rel="stylesheet" href="../Static/dist/layout-default-latest.css" />
+<link rel="stylesheet" href="../Static/RCP/RCP.css" />
 
 <script src="../Static/dist/jquery-2.0.3.min.js"></script>
 <script src="../Static/dist/libs/jquery-ui-1.10.4.custom.min.js"></script>
 <script src="../Static/dist/jquery.layout-1.3.0.min.js"></script>
 <script src="../Static/dist/jstree.min.js"></script>
-        
-<script type="text/javascript">
-var messages = [];
-var needUpdate = false;
-var reconnectingTimer = undefined;
-var paused = false;
-
-function syntaxHighlight(json) {
-    if (typeof json != 'string') {
-         json = JSON.stringify(json, undefined, 2);
-    }
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'key';
-            } else {
-                cls = 'string';
-            }
-        } else if (/true|false/.test(match)) {
-            cls = 'boolean';
-        } else if (/null/.test(match)) {
-            cls = 'null';
-        }
-        return '<span class="' + cls + '">' + match + '</span>';
-    });
-}
-
-function GenerateMessageHtml(message){
-	messageHtml = message.Data;
-	messageHtml += '<a href="javascript:void(0)" onclick="$(this).next().slideToggle(100);" >&#8744;</a>'
-	messageHtml += '<pre class="messageInfo">';
-	messageHtml += syntaxHighlight(message.Info);
-	messageHtml += "</pre>";
-	return messageHtml
-}
-
-function ProcessIncomingMessage(evt){
-	if(paused == true)
-		return;
-	
-	message = JSON.parse(evt.data);
-	messageHtml = GenerateMessageHtml(message);
-	
-	messageDiv = $('<div class="messageContainer">').html(messageHtml).appendTo(document.getElementById("messages"))
-    messages.push(messageDiv);
-    if(messages.length > 2000){
-    	for (var i=0; i<1000; i++){
-        	first = messages.shift();
-        	first.remove();
-        	delete(first); 
-    	}
-    }
-    window.scrollTo(0,document.body.scrollHeight);
-}
-function Connect(){
-    var ws = new WebSocket("{{WebSocketPath}}");
-    ws.onmessage = ProcessIncomingMessage
-    document.getElementById("system").innerHTML = "";
-    ws.onclose = function(){ 
-        document.getElementById("system").innerHTML = "<br>Disconnected. Reconnectiong...";
-        window.scrollTo(0,document.body.scrollHeight);
-        reconnectingTimer = window.setInterval("javascript:Reconnect()",1000);
-    };
-}
-function Reconnect(){
-	Connect();
-	window.clearInterval(reconnectingTimer)
-}
-function ClearConsole(){
-	messages.forEach(function(msgDive){
-		msgDive.remove();
-		delete(first);
-	});
-	messages = [];
-	document.getElementById("messages").innerHTML = "";
-}
-function FreezeConsole(){
-	document.getElementById("FreezeButton").innerHTML = paused?"Pause":"Run";
-	paused = !paused;
-}
-</script>
+<script src="../Static/rcp/rcp.js"></script>
 
 <script type="text/javascript">
 $(function() {
@@ -126,17 +26,12 @@ $(function() {
 		,	west__minSize:				130
 		,	center__minWidth:			100
 		,	showDebugMessages:			true // log and/or display messages from debugging & testing code
-		,   onresize_end: function(){
-			SapphireClientUI.ResizeFrame();
-		}
 		});
 
-		
-		
 	    if ("WebSocket" in window) 
 	    {
 	        messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
-	        Connect();
+	        Connect("{{WebSocketPath}}");
 		} 
 	    else 
 	    {
@@ -151,10 +46,10 @@ $(function() {
 <div class="ui-layout-west">
 </div>
 <div class="ui-layout-center" >
-   	<div class="consoleButtons">
-	<button id="ClearButton" onclick="javascript:OnLoad:ClearConsole()">Clear</button>
+   	<div class="consoleButtonsPanel">
+	<button id="ClearButton" class="consoleButtons" onclick="javascript:OnLoad:ClearConsole()">Clear</button>
 	<br>
-	<button id="FreezeButton" onclick="javascript:OnLoad:FreezeConsole()">Pause</button>
+	<button id="FreezeButton" class="consoleButtons" onclick="javascript:OnLoad:FreezeConsole()">Pause</button>
 	</div>
     <div id="messages" style="font-family: Consolas,monospace;"></div>
     <div id="system"></div>
