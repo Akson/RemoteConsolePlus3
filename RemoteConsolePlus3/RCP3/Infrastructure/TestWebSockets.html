@@ -27,11 +27,26 @@ $(function() {
 		,	center__minWidth:			100
 		,	showDebugMessages:			true // log and/or display messages from debugging & testing code
 		});
+		
+		$('#jstree').jstree({
+			'core' : {
+				'data' : {
+					'url' : '../StreamsTree/GetTree',
+					'data' : function (node) {
+						return { 'id' : node.id };
+					}
+				}
+			},
+			'plugins' : ["json_data", "checkbox"]
+		});
+		$('#Refresh').on('click', function () {
+			$('#jstree').jstree('refresh');
+		});
 
 	    if ("WebSocket" in window) 
 	    {
-	        messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
-	        Connect("{{WebSocketPath}}");
+	        RCP.messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
+	        RCP.Connect("{{WebSocketPath}}");
 		} 
 	    else 
 	    {
@@ -44,12 +59,14 @@ $(function() {
 </head>
 <body>
 <div class="ui-layout-west">
+	<button id="Refresh">Refresh</button>
+	<div id="jstree"></div>
 </div>
 <div class="ui-layout-center" >
    	<div class="consoleButtonsPanel">
-	<button id="ClearButton" class="consoleButtons" onclick="javascript:OnLoad:ClearConsole()">Clear</button>
+	<button id="ClearButton" class="consoleButtons" onclick="javascript:RCP.ClearConsole()">Clear</button>
 	<br>
-	<button id="FreezeButton" class="consoleButtons" onclick="javascript:OnLoad:FreezeConsole()">Pause</button>
+	<button id="FreezeButton" class="consoleButtons" onclick="javascript:RCP.FreezeConsole()">Pause</button>
 	</div>
     <div id="messages" style="font-family: Consolas,monospace;"></div>
     <div id="system"></div>

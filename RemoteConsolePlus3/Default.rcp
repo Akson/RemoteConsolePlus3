@@ -465,7 +465,7 @@
                     "backendParameters": {
                         "serverAddress": "tcp://*:55557",
                         "streamsList": [
-                            "#"
+                            ""
                         ]
                     },
                     "backendPath": "RCP3.Backends.Sources.ZMQ.RcpStream",
@@ -473,7 +473,7 @@
                         17,
                         184
                     ],
-                    "text": "RcpStream: [u'#']"
+                    "text": "RcpStream: [u'']"
                 }
             },
             {
