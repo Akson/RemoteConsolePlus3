@@ -53,6 +53,23 @@ $(function() {
 	    {
 	        document.getElementById("system").innerHTML = "WebSocket NOT supported by your Browser!";
 	    }
+	    
+	    $( "#info-dialog" ).dialog({
+	        autoOpen: false,
+	        show: {
+	          effect: "drop",
+	          duration: 200
+	        },
+	        hide: {
+	          effect: "drop",
+	          duration: 200
+	        }
+	      });
+	    $( "#info-dialog" ).dialog( "open" );
+		$('#test-button').on('click', function () {
+			$('body').layout().show("south");
+			$("#bottom-information-panel").html("Disconnected. Reconnecting...");
+		});
 	});
 });
 </script>
@@ -60,6 +77,7 @@ $(function() {
 </head>
 <body>
 <div class="ui-layout-west">
+<button id="test-button">test</button>
 	<button id="Refresh">Refresh</button>
 	<div id="jstree"></div>
 </div>
@@ -70,7 +88,10 @@ $(function() {
 	<button id="FreezeButton" class="consoleButtons" onclick="javascript:RCP.FreezeConsole()">Pause</button>
 	</div>
     <div id="messages" style="font-family: Consolas,monospace;"></div>
-    <div id="system"></div>
+</div>
+
+<div class="ui-layout-south" id="bottom-information-panel">  
+Connecting...
 </div>
 </body>
 </html>

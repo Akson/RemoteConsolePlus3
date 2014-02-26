@@ -18,3 +18,10 @@ pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:non
     min-height:40px;
     width:100%;
 }
+
+.ui-layout-south{
+	color:white;
+	padding: 5px; 
+	background: rgb(150,0,0);
+	font-weight: bold;
+}

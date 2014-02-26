@@ -56,11 +56,13 @@ var RCP = {
 		Connect : function(){
 			var ws = new WebSocket(RCP.websocketServerName);
 			ws.onmessage = RCP.ProcessIncomingMessage
-			document.getElementById("system").innerHTML = "";
 			ws.onclose = function(){ 
-				document.getElementById("system").innerHTML = "<br>Disconnected. Reconnectiong...";
-				window.scrollTo(0,document.body.scrollHeight);
+				$('body').layout().show("south");
+				$("#bottom-information-panel").html("Disconnected. Reconnecting...");
 				RCP.reconnectingTimer = window.setInterval("javascript:RCP.Reconnect()",1000);
+			};
+			ws.onopen = function(){ 
+				$('body').layout().hide("south");
 			};
 		},
 		
