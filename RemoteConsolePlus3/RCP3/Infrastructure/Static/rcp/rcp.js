@@ -58,15 +58,17 @@ var RCP = {
 			ws.onmessage = RCP.ProcessIncomingMessage
 			ws.onclose = function(){ 
 				$('body').layout().show("south");
-				$("#bottom-information-panel").html("Disconnected. Reconnecting...");
+				$("#bottom-information-panel").html("Disconnected. Waiting 1 second before reconnecting...");
 				RCP.reconnectingTimer = window.setInterval("javascript:RCP.Reconnect()",1000);
 			};
 			ws.onopen = function(){ 
+				$("#bottom-information-panel").html("Connected.");
 				$('body').layout().hide("south");
 			};
 		},
 		
 		Reconnect : function(){
+			$("#bottom-information-panel").html("Disconnected. Reconnecting...");
 			RCP.Connect();
 			window.clearInterval(RCP.reconnectingTimer)
 		},
