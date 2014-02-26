@@ -15,6 +15,7 @@
 <script src="../Static/rcp/rcp.js"></script>
 
 <script type="text/javascript">
+RCP.websocketServerName = "{{WebSocketPath}}";
 $(function() {
 	$(document).ready(function() {
 		
@@ -46,7 +47,7 @@ $(function() {
 	    if ("WebSocket" in window) 
 	    {
 	        RCP.messages.push($('<div class="messageContainer">').html("WebSocket is supported by your Browser! Waiting for incoming messages...").appendTo(document.getElementById("messages")));
-	        RCP.Connect("{{WebSocketPath}}");
+	        RCP.Connect();
 		} 
 	    else 
 	    {

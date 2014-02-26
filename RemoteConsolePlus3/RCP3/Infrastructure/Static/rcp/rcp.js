@@ -1,4 +1,5 @@
 var RCP = {
+		websocketServerName : "",
 		messages : [],
 		reconnectingTimer : undefined,
 		paused : false,
@@ -52,19 +53,19 @@ var RCP = {
 			$(".ui-layout-center").scrollTop($("#messages").height());
 		},
 		
-		Connect : function(websocketPath){
-			var ws = new WebSocket(websocketPath);
+		Connect : function(){
+			var ws = new WebSocket(RCP.websocketServerName);
 			ws.onmessage = RCP.ProcessIncomingMessage
 			document.getElementById("system").innerHTML = "";
 			ws.onclose = function(){ 
 				document.getElementById("system").innerHTML = "<br>Disconnected. Reconnectiong...";
 				window.scrollTo(0,document.body.scrollHeight);
-				RCP.reconnectingTimer = window.setInterval("javascript:Reconnect()",1000);
+				RCP.reconnectingTimer = window.setInterval("javascript:RCP.Reconnect()",1000);
 			};
 		},
 		
 		Reconnect : function(){
-			Connect();
+			RCP.Connect();
 			window.clearInterval(RCP.reconnectingTimer)
 		},
 		
