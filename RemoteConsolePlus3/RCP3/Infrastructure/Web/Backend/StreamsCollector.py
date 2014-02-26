@@ -7,22 +7,19 @@ import collections
 import json
 import traceback
 
-def Tree():
-    return collections.defaultdict(Tree)
-
 class StreamsCollector(object):
     def __init__(self):
-        self._root = Tree()
+        self._root = {}
 
     def GetStreamsTree(self):
         return self._root
 
     def RegisterStreamName(self, rawStreamName):
-        print rawStreamName
+        print self._root
         streamName = rawStreamName[:-1]
         streamComponents = streamName.split("/")
         curNode = self._root
         for component in streamComponents:
             if component not in curNode:
-                curNode[component] = Tree()
+                curNode[component] = {}
             curNode = curNode[component]

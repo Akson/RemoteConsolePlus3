@@ -1,11 +1,11 @@
 #Created by Dmytro Konobrytskyi, 2014 (github.com/Akson)
-from RCP3.Infrastructure.StreamsCollector import StreamsCollector
 import json
+from RCP3.Infrastructure.Web.Backend.StreamsCollector import StreamsCollector
 
 class ZmqMessageProcessor(object):
     def __init__(self):
         self._streamsCollector = StreamsCollector()
-        self._clientsConnectedToStreams = {}
+        self._sessionClients = {}
         
     def OnIncomingZmqMessage(self, zmqMessages):
         for zmqMessage in zmqMessages:
@@ -13,14 +13,14 @@ class ZmqMessageProcessor(object):
             streamName = jsonMessage["Stream"]
             self._streamsCollector.RegisterStreamName(streamName)
 
-            for session in self._clientsConnectedToStreams:             
-                for client in self._clientsConnectedToStreams[session]:
+            for session in self._sessionClients:             
+                for client in self._sessionClients[session]:
                     client.write_message(zmqMessage)
     
     def RegisterStreamListener(self, sessionName, streamListener):
-        if not sessionName in self._clientsConnectedToStreams:
-            self._clientsConnectedToStreams[sessionName] = []
-        self._clientsConnectedToStreams[sessionName].append(streamListener)
+        if not sessionName in self._sessionClients:
+            self._sessionClients[sessionName] = []
+        self._sessionClients[sessionName].append(streamListener)
         
     def UnRegisterStreamListener(self, sessionName, streamListener):
-        self._clientsConnectedToStreams[sessionName].remove(streamListener)
+        self._sessionClients[sessionName].remove(streamListener)

@@ -1,5 +1,4 @@
 #Created by Dmytro Konobrytskyi, 2013 (github.com/Akson)
-from RCP3.Infrastructure import WebSocketServer
 import json
 import wx
 import webbrowser
@@ -48,9 +47,9 @@ class Backend(object):
         linkDict = {}
         linkDict["serverAddress"]=Config["Web server"]["Address"]
         linkDict["serverPort"]=Config["Web server"]["Port"]
-        linkDict["sessionName"]=self._streamName
+        linkDict["sessionId"]=self._streamName
 
-        link = "http://{serverAddress}:{serverPort}/OutputConsole/?sessionName={sessionName}".format(**linkDict)
+        link = "http://{serverAddress}:{serverPort}/OutputConsole/?sessionId={sessionId}".format(**linkDict)
         webbrowser.open(link)
 
     def AppendContextMenuItems(self, menu):

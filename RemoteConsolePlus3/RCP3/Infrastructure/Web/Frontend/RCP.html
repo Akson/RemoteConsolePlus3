@@ -16,6 +16,7 @@
 
 <script type="text/javascript">
 RCP.websocketServerName = "{{WebSocketPath}}";
+RCP.sessionId = "{{SessionId}}";
 $(function() {
 	$(document).ready(function() {
 		
@@ -33,9 +34,7 @@ $(function() {
 			'core' : {
 				'data' : {
 					'url' : '../StreamsTree/GetTree',
-					'data' : function (node) {
-						return { 'id' : node.id };
-					}
+					'data' : { 'sessionId' : RCP.sessionId }
 				}
 			},
 			'plugins' : ["json_data", "checkbox"]
