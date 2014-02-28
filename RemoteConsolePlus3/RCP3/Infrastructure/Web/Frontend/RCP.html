@@ -38,9 +38,16 @@ $(function() {
 				}
 			},
 			'plugins' : ["json_data", "checkbox"]
-		});
+		})
+		
 		$('#Refresh').on('click', function () {
 			$('#jstree').jstree('refresh');
+		});
+		
+		$("#jstree").on('changed.jstree', function (e, data) {
+			console.log("changed")	
+			console.log(e)
+			console.log(data)
 		});
 
 	    if ("WebSocket" in window) 

@@ -41,17 +41,17 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         
     def open(self, *args):
         self._sessionId = self.get_argument("sessionId")
-        print "WS open", self._sessionId
+        print "WebSocket opened for session:", self._sessionId
         self._sessionManager.RegisterClientConnection(self._sessionId, self)
         self.stream.set_nodelay(True)
 
     def on_close(self):
-        print "WS close", self._sessionId
+        print "WebSocket closed for session:", self._sessionId
         self._sessionManager.UnRegisterClientConnection(self._sessionId, self)
 
 
 class StreamsTreeRequestHandler(tornado.web.RequestHandler):
-    _currentTree = {'text':'root', 'children':[], 'id':'root'}
+    _currentTree = {'text':'root', 'children':[], 'id':'root', 'state':{'selected':True}}
 
     def initialize(self, sessionsManager):
         self._sessionsManager = sessionsManager
@@ -71,12 +71,15 @@ class StreamsTreeRequestHandler(tornado.web.RequestHandler):
     
     @tornado.web.asynchronous
     def get(self, params):
-        print "tree requested", params
-        print self._sessionsManager.GetSessionTree(self.get_argument("sessionId"))
-        self.GrowTree(10)
+        print "tree requested", params, self.get_argument("sessionId")
+        print self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()
+        #self.GrowTree(10)
         self.set_header("Content-Type", 'application/json')
-        self.write(json.dumps(StreamsTreeRequestHandler._currentTree))
-        print json.dumps(StreamsTreeRequestHandler._currentTree)
+        #self.write(json.dumps(StreamsTreeRequestHandler._currentTree))
+        #print json.dumps(StreamsTreeRequestHandler._currentTree)
+        
+        self.write(json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()))
+        
         self.flush()
         self.finish()
         

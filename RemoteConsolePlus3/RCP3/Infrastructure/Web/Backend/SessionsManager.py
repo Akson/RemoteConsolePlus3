@@ -25,4 +25,4 @@ class SessionsManager(object):
         self._sessions[sessionId].UnRegisterClientConnection(clientConnection)
     
     def GetSessionTree(self, sessionId):
-        return None
+        return self._sessions[sessionId].GetStreamsTree()
