@@ -55,31 +55,12 @@ class StreamsTreeRequestHandler(tornado.web.RequestHandler):
 
     def initialize(self, sessionsManager):
         self._sessionsManager = sessionsManager
-        
-    def CreateNewRandomTreeNode(self):
-        rnadStr = 'node'+str(randint(0, 10000))
-        return {'text':rnadStr, 'children':[], 'id':rnadStr}
 
-    def GrowTree(self, newNodesNumber = 1):
-        for i in range(newNodesNumber):
-            curNode = StreamsTreeRequestHandler._currentTree
-            while len(curNode['children']) > 0:
-                if random()<(1.0/len(curNode['children'])):
-                    break
-                curNode = curNode['children'][randint(0, len(curNode['children'])-1)]
-            curNode['children'].append(self.CreateNewRandomTreeNode())
-    
     @tornado.web.asynchronous
     def get(self, params):
-        print "tree requested", params, self.get_argument("sessionId")
         print self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()
-        #self.GrowTree(10)
         self.set_header("Content-Type", 'application/json')
-        #self.write(json.dumps(StreamsTreeRequestHandler._currentTree))
-        #print json.dumps(StreamsTreeRequestHandler._currentTree)
-        
         self.write(json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()))
-        
         self.flush()
         self.finish()
         
