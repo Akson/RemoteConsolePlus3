@@ -16,12 +16,11 @@ import zmq
 
 from zmq.eventloop import ioloop
 from zmq.eventloop.zmqstream import ZMQStream
-from RCP3.Infrastructure.Web.Backend.ZmqMessageProcessor import ZmqMessageProcessor
-from RCP3.Infrastructure.Web.Backend.StreamsTreeManager import StreamsTreeRequestHandler
 import os
+from RCP3.Infrastructure.Web.Backend.SessionsManager import SessionsManager
 ioloop.install()
 
-WebServerStopRequested = False
+from random import randint, random
 
 class IndexHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
@@ -34,36 +33,70 @@ class IndexHandler(tornado.web.RequestHandler):
         webSocketPath = "ws://{serverAddress}:{serverPort}/WebSockets/?sessionId={sessionId}".format(**pathDict)
         self.render("RCP.html", WebSocketPath=webSocketPath, SessionId=self.get_argument("sessionId"))
                 
+                
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
-    def initialize(self, zmqMessageProcessor):
-        self._zmqMessageProcessor = zmqMessageProcessor
+    def initialize(self, sessionsManager):
+        self._zmqMessageProcessor = sessionsManager
+        self._sessionManager = sessionsManager
         
     def open(self, *args):
         self._sessionId = self.get_argument("sessionId")
-        print "open", self._sessionId
-        self._zmqMessageProcessor.RegisterStreamListener(self._sessionId, self)
+        print "WS open", self._sessionId
+        self._sessionManager.RegisterClientConnection(self._sessionId, self)
         self.stream.set_nodelay(True)
 
     def on_close(self):
-        print "close"
-        self._zmqMessageProcessor.UnRegisterStreamListener(self._sessionId, self)
+        print "WS close", self._sessionId
+        self._sessionManager.UnRegisterClientConnection(self._sessionId, self)
 
+
+class StreamsTreeRequestHandler(tornado.web.RequestHandler):
+    _currentTree = {'text':'root', 'children':[], 'id':'root'}
+
+    def initialize(self, sessionsManager):
+        self._sessionsManager = sessionsManager
+        
+    def CreateNewRandomTreeNode(self):
+        rnadStr = 'node'+str(randint(0, 10000))
+        return {'text':rnadStr, 'children':[], 'id':rnadStr}
+
+    def GrowTree(self, newNodesNumber = 1):
+        for i in range(newNodesNumber):
+            curNode = StreamsTreeRequestHandler._currentTree
+            while len(curNode['children']) > 0:
+                if random()<(1.0/len(curNode['children'])):
+                    break
+                curNode = curNode['children'][randint(0, len(curNode['children'])-1)]
+            curNode['children'].append(self.CreateNewRandomTreeNode())
+    
+    @tornado.web.asynchronous
+    def get(self, params):
+        print "tree requested", params
+        print self._sessionsManager.GetSessionTree(self.get_argument("sessionId"))
+        self.GrowTree(10)
+        self.set_header("Content-Type", 'application/json')
+        self.write(json.dumps(StreamsTreeRequestHandler._currentTree))
+        print json.dumps(StreamsTreeRequestHandler._currentTree)
+        self.flush()
+        self.finish()
+        
+        
+WebServerStopRequested = False
 def CheckServerStopRequests():
     if WebServerStopRequested:
         tornado.ioloop.IOLoop.instance().stop()
+
         
 def Run():
     try:
         print "Running web server on port: "+str(Config["Web server"]["Port"])
-        
-        zmqMessageProcessor = ZmqMessageProcessor()
+        sessionsManager = SessionsManager()
         
         socket = zmq.Context.instance().socket(zmq.SUB)
         socket.bind("tcp://*:"+str(Config["Web server"]["IncomingZmqPort"]))
         socket.setsockopt(zmq.SUBSCRIBE, "")
         stream = ZMQStream(socket)
-        stream.on_recv(zmqMessageProcessor.OnIncomingZmqMessage)
-        
+        stream.on_recv(sessionsManager.ProcessZmqMessages)
         
         settings = {
             "debug" : True,
@@ -74,8 +107,8 @@ def Run():
             (r'/Static/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), "../Frontend/Static")}),
             (r'/Tmp/(.*)', tornado.web.StaticFileHandler, {'path': Config["Web server"]["Temporary files folder"]}),
             (r'/OutputConsole/', IndexHandler),
-            (r'/StreamsTree/(.*)', StreamsTreeRequestHandler, dict(zmqMessageProcessor=zmqMessageProcessor)),
-            (r'/WebSockets/', WebSocketHandler, dict(zmqMessageProcessor=zmqMessageProcessor)),
+            (r'/StreamsTree/(.*)', StreamsTreeRequestHandler, dict(sessionsManager=sessionsManager)),
+            (r'/WebSockets/', WebSocketHandler, dict(sessionsManager=sessionsManager)),
             
         ], **settings)
         
