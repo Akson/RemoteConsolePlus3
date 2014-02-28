@@ -31,9 +31,9 @@ class StreamsTree(object):
         
         localRootNode = {}
         localRootNode['id'] = "/".join(namesStack)+"#"
-        localRootNode['text'] = '#'
+        localRootNode['text'] = '.'
         localRootNode['state'] = {'selected':node._enabled}
-        if namesStack[-1] != "#":
+        if namesStack[-1] != "#" and len(node) > 0:
             children.append(localRootNode)
        
         for childName in node:
