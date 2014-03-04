@@ -58,12 +58,19 @@ class StreamsTreeRequestHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self, params):
-        print self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()
+        print json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat(), sort_keys=True, indent=4)
         self.set_header("Content-Type", 'application/json')
         self.write(json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()))
         self.flush()
         self.finish()
         
+    @tornado.web.asynchronous
+    def post(self, params):
+        print "POST", params, self.get_argument("sessionId")
+        self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).UpdateSelectionFromList(json.loads(self.get_argument("selectedNodes")))
+        self.write({"success":True})
+        self.flush()
+        self.finish()
         
 WebServerStopRequested = False
 def CheckServerStopRequests():

@@ -38,14 +38,10 @@ $(function() {
 				}
 			},
 			'plugins' : ["json_data", "checkbox"]
-		})
+		}).on('changed.jstree', RCP.OnTreeChanged);
 		
 		$('#Refresh').on('click', function () {
 			$('#jstree').jstree('refresh');
-		});
-		
-		$("#jstree").on('changed.jstree', function (e, data) {
-			console.log(data)
 		});
 
 	    if ("WebSocket" in window) 
@@ -81,7 +77,7 @@ $(function() {
 </head>
 <body>
 <div class="ui-layout-west">
-<button id="test-button">test</button>
+	<button id="test-button">test</button>
 	<button id="Refresh">Refresh</button>
 	<div id="jstree"></div>
 </div>

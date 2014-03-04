@@ -1,4 +1,4 @@
-var RCP = {
+RCP = {
 		websocketServerName : "",
 		messages : [],
 		reconnectingTimer : undefined,
@@ -44,7 +44,7 @@ var RCP = {
 
 			messageDiv = $('<div class="messageContainer">').html(messageHtml).appendTo(document.getElementById("messages"))
 			RCP.messages.push(messageDiv);
-			
+
 			if(RCP.messages.length > 1000){
 				for (var i=0; i<500; i++){
 					RCP.messages.shift().remove();
@@ -52,7 +52,7 @@ var RCP = {
 			}
 			$(".ui-layout-center").scrollTop($("#messages").height());
 		},
-		
+
 		Connect : function(){
 			var ws = new WebSocket(RCP.websocketServerName);
 			ws.onmessage = RCP.ProcessIncomingMessage
@@ -66,20 +66,32 @@ var RCP = {
 				$('body').layout().hide("south");
 			};
 		},
-		
+
 		Reconnect : function(){
 			$("#bottom-information-panel").html("Disconnected. Reconnecting...");
 			RCP.Connect();
 			window.clearInterval(RCP.reconnectingTimer)
 		},
-		
+
 		ClearConsole:function(){
 			RCP.messages = [];
 			document.getElementById("messages").innerHTML = "";
 		},
-		
+
 		FreezeConsole:function(){
 			$("#FreezeButton").html(RCP.paused?"Pause":"Run");
 			RCP.paused = !RCP.paused;
+		},
+
+		OnTreeChanged:function(event, data){
+			//console.log("OnTreeSelectionChanged", event, data);
+			if(data.action == "select_node" || data.action == "deselect_node"){
+				var jqxhr = $.post( '../StreamsTree/UpdateTreeSelection', { 
+					'sessionId' : RCP.sessionId,
+					'selectedNodes' : JSON.stringify(data.selected)
+				}).done(function() {
+					console.log( "AJAX POS update selection done" );
+				});
+			}
 		}
 }

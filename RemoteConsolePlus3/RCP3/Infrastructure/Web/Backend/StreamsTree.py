@@ -2,7 +2,7 @@
 
 class StreamsTreeNode(dict):
     def __init__(self):
-        self._enabled = True
+        self._selected = True
         
 class StreamsTree(object):
     def __init__(self):
@@ -26,13 +26,14 @@ class StreamsTree(object):
         jsNode = {}
         jsNode['id'] = "/".join(namesStack)
         jsNode['text'] = namesStack[-1]
+        jsNode['state'] = {'selected':node._selected}
 
         children = []
         
         localRootNode = {}
         localRootNode['id'] = "/".join(namesStack)+"#"
         localRootNode['text'] = '.'
-        localRootNode['state'] = {'selected':node._enabled}
+        localRootNode['state'] = {'selected':node._selected}
         if namesStack[-1] != "#" and len(node) > 0:
             children.append(localRootNode)
        
@@ -41,3 +42,6 @@ class StreamsTree(object):
         
         jsNode['children'] = children
         return jsNode
+    
+    def UpdateSelectionFromList(self, selectedNodes):
+        print selectedNodes
