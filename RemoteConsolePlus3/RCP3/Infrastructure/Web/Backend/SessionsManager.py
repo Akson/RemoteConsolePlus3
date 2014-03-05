@@ -10,7 +10,6 @@ class SessionsManager(object):
         for zmqMessage in zmqMessages:
             jsonMessage = json.loads(zmqMessage)
             rawStreamName = jsonMessage["Stream"]
-            print rawStreamName
             
             for session in self._sessions.itervalues():
                 session.ProcessZmqMessage(zmqMessage, rawStreamName)

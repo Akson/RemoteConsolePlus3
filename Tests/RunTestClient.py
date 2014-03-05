@@ -34,9 +34,9 @@ if __name__ == '__main__':
     
     i=0
     while True:
-        rc.SendMessage("streamtest%d"%(i), "#")
         rc.SendMessage("teststst%d"%(i+1), "Stream1#")
         rc.SendMessage("teststst%d"%(i+2), "Stream2#")
+        rc.SendMessage("teststst%d"%(i+2), "Stream3#")
         rc.SendMessage("teststst%d"%(i+3), "Stream1/A#")
         rc.SendMessage("teststst%d"%(i+4), "Stream1/B#")
         i+=1

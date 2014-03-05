@@ -100,7 +100,17 @@ class Backend(object):
         firstSeparatorPosition = zmqMessage.find(chr(0))
         secondSeparatorPosition = zmqMessage.find(chr(0), firstSeparatorPosition+1)
         parsedMessage = {}
-        parsedMessage["Stream"] = zmqMessage[:firstSeparatorPosition]
+        streamName = zmqMessage[:firstSeparatorPosition]
+        
+        if len(streamName)==0 or streamName=='#':
+            logging.warning("Message with an empty stream name is dropped")
+            return
+
+        if streamName[-1]!='#':
+            logging.warning("Message with a stream name that does not end with # is dropped: "+streamName)
+            return
+        
+        parsedMessage["Stream"] = streamName
         parsedMessage["Data"] = zmqMessage[secondSeparatorPosition+1:]
         parsedMessage["Info"] = {}
         infoString = zmqMessage[firstSeparatorPosition+1:secondSeparatorPosition]

@@ -36,13 +36,9 @@ class Backend(object):
         """
 
         processedMessage = {"Stream":message["Stream"], "Info":message["Info"]}
-        
-        print message["Info"]
 
         if (not "Width" in message["Info"]) or (not "Height" in message["Info"]):
             #Try to decode image in one of standard formats
-            print "Try to decode compressed image"
-            print message["Data"]
             img = cv2.imdecode(np.frombuffer(message["Data"], dtype=np.uint8), -1)
         else:
             w = int(message["Info"]["Width"])
@@ -52,11 +48,9 @@ class Backend(object):
             
             if LineSizeInBytes != w*BytesPerPixel:
                 #We have padding bytes...
-                print w, h, BytesPerPixel, LineSizeInBytes
                 logging.error("Not implemented!!!")
                 img = None
             else:
-                print message["Data"].shape
                 img = np.reshape(message["Data"], (h, w, BytesPerPixel))
 
         if img != None:            

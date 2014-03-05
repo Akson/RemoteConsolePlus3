@@ -20,31 +20,29 @@ class StreamsTree(object):
         return curNode._selected
 
     def GetTreeInJstreeFormat(self):
-        self.PrintSubtree([self._root])
-        return self.ConvertStreamsTreeNodeIntoJstreeNode(self._root, ['#'])
+        #self.PrintSubtree([self._root])
+        return [self.ConvertStreamsTreeNodeIntoJstreeNode(self._root[childName], [childName]) for childName in self._root]
 
     def ConvertStreamsTreeNodeIntoJstreeNode(self, node, namesStack):
         jsNode = {}
         jsNode['text'] = namesStack[-1]
         jsNode['id'] = "/".join(namesStack)
-        if namesStack[-1] != "#" and len(node) > 0:
-            jsNode['id'] += "#"
-        else:
-            jsNode['state'] = {'selected':node._selected}
+        jsNode['children'] = []
 
-        children = []
+        if len(node) == 0:
+            jsNode['state'] = {'selected':node._selected}
+        else:
+            localRootNode = {}
+            localRootNode['id'] = "/".join(namesStack)
+            localRootNode['text'] = '.'
+            localRootNode['state'] = {'selected':node._selected}
+            jsNode['id'] += "#"
+            if namesStack[-1] != "ROOT":
+                jsNode['children'].append(localRootNode)
+
+            for childName in node:
+                jsNode['children'].append(self.ConvertStreamsTreeNodeIntoJstreeNode(node[childName], namesStack+[childName]))
         
-        localRootNode = {}
-        localRootNode['id'] = "/".join(namesStack)
-        localRootNode['text'] = '.'
-        localRootNode['state'] = {'selected':node._selected}
-        if namesStack[-1] != "#" and len(node) > 0:
-            children.append(localRootNode)
-       
-        for childName in node:
-            children.append(self.ConvertStreamsTreeNodeIntoJstreeNode(node[childName], namesStack+[childName]))
-        
-        jsNode['children'] = children
         return jsNode
     
     def ClearSelectionRecursively(self, node):
@@ -58,7 +56,8 @@ class StreamsTree(object):
         for selectedNodeId in selectedNodes:
             if selectedNodeId[-1] == '#':
                 continue
-            pathComponents = selectedNodeId.split("/")[1:]
+            pathComponents = selectedNodeId.split("/")
+            print pathComponents
 
             curNode = self._root
             for component in pathComponents:
@@ -66,7 +65,7 @@ class StreamsTree(object):
             
             curNode._selected = True
             
-        self.PrintSubtree([self._root])
+        #self.PrintSubtree([self._root])
 
     def PrintSubtree(self, nodesStack):
         curNode = nodesStack[-1]

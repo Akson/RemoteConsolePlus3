@@ -14,20 +14,13 @@ class RCP2Client(object):
         self._socket = self._context.socket(zmq.PUB)
         self._socket.connect(address)
     
-    def SendMessage(self, value, streamName="TextHtml", additionalInfo={}):
-        if streamName:
-            if streamName[0] == "@":
-                streamName = streamName[1:]
-            else:
-                if streamName != "TextHtml":
-                    streamName += "TextHtml/"+streamName  
-        
+    def SendMessage(self, value, streamName="", additionalInfo={"ProcessingSequence":"_Text"}):
         if self._socket == None:
             raise Exception("Attempt to send message without connection.")
 
         additionalInfo["TimeStamp"] = int(time.time()*1000)
         
-        message = "%s%c%s%c%s"%("" if streamName == None else streamName, chr(0), json.dumps(additionalInfo), chr(0), str(value))
+        message = "%s#%c%s%c%s"%("DefaultStream" if streamName == None else streamName, chr(0), json.dumps(additionalInfo), chr(0), str(value))
     
         self._socket.send(message)
 
@@ -50,16 +43,16 @@ if __name__ == '__main__':
         height, width = frame.shape[:2]
         print frame.dtype, frame.shape
 
-        rc.SendMessage("Sending image...")
+        rc.SendMessage("Sending image...", "Image")
         info = {"DataType":"Binary", "BinaryDataFormat":"B", "Dimensions":str(frame.shape)}
-        rc.SendMessage(json.dumps({"Value":info}), "#", {"DataType":"JSON"})
+        rc.SendMessage(json.dumps({"Value":info}), "Image", {"ProcessingSequence":"_Json", "DataType":"JSON"})
         #rc.SendMessage(frame.tostring(), "@ImageViewer", info)
 
         info = {"ProcessingSequence":"_Image"}
         ret, buf = cv2.imencode(".jpg", frame)
         print buf.shape
         bufStr = buf.tostring()
-        rc.SendMessage(buf.tostring(), "#", info)
+        rc.SendMessage(buf.tostring(), "Image", info)
 
         i+=1
         time.sleep(1.5)
