@@ -3,6 +3,7 @@ RCP = {
 		messages : [],
 		reconnectingTimer : undefined,
 		paused : false,
+		treeRefreshing : false,
 
 		syntaxHighlight : function(json) {
 			if (typeof json != 'string') {
@@ -84,8 +85,10 @@ RCP = {
 		},
 
 		OnTreeChanged:function(event, data){
-			//console.log("OnTreeSelectionChanged", event, data);
-			if(data.action == "select_node" || data.action == "deselect_node"){
+			console.log("OnTreeSelectionChanged", event, data);
+			if((data.action == "select_node" || data.action == "deselect_node") 
+					&& RCP.treeRefreshing == false){
+				console.log(RCP.treeRefreshing);
 				var jqxhr = $.post( '../StreamsTree/UpdateTreeSelection', { 
 					'sessionId' : RCP.sessionId,
 					'selectedNodes' : JSON.stringify(data.selected)
@@ -93,5 +96,11 @@ RCP = {
 					console.log( "AJAX POS update selection done" );
 				});
 			}
+		},
+		
+		RefreshTree:function(){
+			RCP.treeRefreshing = true;
+			$('#jstree').jstree('refresh');
 		}
+		
 }

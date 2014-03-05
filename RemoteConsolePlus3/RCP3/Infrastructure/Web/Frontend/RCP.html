@@ -38,11 +38,13 @@ $(function() {
 				}
 			},
 			'plugins' : ["json_data", "checkbox"]
-		}).on('changed.jstree', RCP.OnTreeChanged);
-		
-		$('#Refresh').on('click', function () {
-			$('#jstree').jstree('refresh');
+		})
+		.on('changed.jstree', RCP.OnTreeChanged)
+		.on('refresh.jstree', function () {
+			RCP.treeRefreshing = false;
 		});
+		
+		$('#Refresh').on('click', RCP.RefreshTree);
 
 	    if ("WebSocket" in window) 
 	    {
@@ -51,7 +53,8 @@ $(function() {
 		} 
 	    else 
 	    {
-	        document.getElementById("system").innerHTML = "WebSocket NOT supported by your Browser!";
+			$('body').layout().show("south");
+			$("#bottom-information-panel").html("WebSocket NOT supported by your Browser!");
 	    }
 	    
 	    $( "#info-dialog" ).dialog({

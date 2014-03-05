@@ -2,7 +2,7 @@
 
 class StreamsTreeNode(dict):
     def __init__(self):
-        self._selected = False
+        self._selected = True
         
 class StreamsTree(object):
     def __init__(self):
@@ -17,18 +17,20 @@ class StreamsTree(object):
                 curNode[component] = StreamsTreeNode()
             curNode = curNode[component]
         
-        return True
+        return curNode._selected
 
     def GetTreeInJstreeFormat(self):
+        self.PrintSubtree([self._root])
         return self.ConvertStreamsTreeNodeIntoJstreeNode(self._root, ['#'])
 
     def ConvertStreamsTreeNodeIntoJstreeNode(self, node, namesStack):
         jsNode = {}
+        jsNode['text'] = namesStack[-1]
         jsNode['id'] = "/".join(namesStack)
         if namesStack[-1] != "#" and len(node) > 0:
             jsNode['id'] += "#"
-        jsNode['text'] = namesStack[-1]
-        jsNode['state'] = {'selected':node._selected}
+        else:
+            jsNode['state'] = {'selected':node._selected}
 
         children = []
         
@@ -63,3 +65,11 @@ class StreamsTree(object):
                 curNode = curNode[component]
             
             curNode._selected = True
+            
+        self.PrintSubtree([self._root])
+
+    def PrintSubtree(self, nodesStack):
+        curNode = nodesStack[-1]
+        for childName in curNode:
+            print '    '*(len(nodesStack)-1), childName, curNode[childName]._selected
+            self.PrintSubtree(nodesStack+[curNode[childName]]) 

@@ -58,7 +58,7 @@ class StreamsTreeRequestHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self, params):
-        print json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat(), sort_keys=True, indent=4)
+        #print json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat(), sort_keys=True, indent=4)
         self.set_header("Content-Type", 'application/json')
         self.write(json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()))
         self.flush()
