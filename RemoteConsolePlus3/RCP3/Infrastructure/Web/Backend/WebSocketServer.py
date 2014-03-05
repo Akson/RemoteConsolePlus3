@@ -68,8 +68,6 @@ class StreamsTreeRequestHandler(tornado.web.RequestHandler):
     def post(self, params):
         print "POST", params, self.get_argument("sessionId")
         self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).UpdateSelectionFromList(json.loads(self.get_argument("selectedNodes")))
-        self.write({"success":True})
-        self.flush()
         self.finish()
         
 WebServerStopRequested = False
