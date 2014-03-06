@@ -43,16 +43,16 @@ if __name__ == '__main__':
         height, width = frame.shape[:2]
         print frame.dtype, frame.shape
 
-        rc.SendMessage("Sending image...", "Image")
+        rc.SendMessage("Sending image...", "Webcam")
         info = {"DataType":"Binary", "BinaryDataFormat":"B", "Dimensions":str(frame.shape)}
-        rc.SendMessage(json.dumps({"Value":info}), "Image", {"ProcessingSequence":"_Json", "DataType":"JSON"})
+        rc.SendMessage(json.dumps({"Value":info}), "Webcam/Info", {"ProcessingSequence":"_Json", "DataType":"JSON"})
         #rc.SendMessage(frame.tostring(), "@ImageViewer", info)
 
         info = {"ProcessingSequence":"_Image"}
         ret, buf = cv2.imencode(".jpg", frame)
         print buf.shape
         bufStr = buf.tostring()
-        rc.SendMessage(buf.tostring(), "Image", info)
+        rc.SendMessage(buf.tostring(), "Webcam/Image", info)
 
         i+=1
-        time.sleep(1.5)
+        time.sleep(1)
