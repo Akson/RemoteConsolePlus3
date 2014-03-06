@@ -33,10 +33,10 @@ class IndexHandler(tornado.web.RequestHandler):
         if sessionId == None:
             randomSessionId = str(int(time.time()*1000))
             self.redirect("/RCP?sessionId="+randomSessionId)
-        pathDict["sessionId"]=sessionId
-        
-        webSocketPath = "ws://{serverAddress}:{serverPort}/WebSockets/?sessionId={sessionId}".format(**pathDict)
-        self.render("RCP.html", WebSocketPath=webSocketPath, SessionId=sessionId)
+        else:
+            pathDict["sessionId"]=sessionId
+            webSocketPath = "ws://{serverAddress}:{serverPort}/WebSockets/?sessionId={sessionId}".format(**pathDict)
+            self.render("RCP.html", WebSocketPath=webSocketPath, SessionId=sessionId)
                 
                 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -63,16 +63,26 @@ class StreamsTreeRequestHandler(tornado.web.RequestHandler):
 
     @tornado.web.asynchronous
     def get(self, params):
-        #print json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat(), sort_keys=True, indent=4)
+        print params
         self.set_header("Content-Type", 'application/json')
-        self.write(json.dumps(self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).GetTreeInJstreeFormat()))
+        sessionId = self.get_argument("sessionId")
+        print sessionId
+        tree = self._sessionsManager.GetSessionTree(sessionId)
+        self.write(json.dumps(tree.GetTreeInJstreeFormat()))
         self.flush()
         self.finish()
         
     @tornado.web.asynchronous
     def post(self, params):
         print "POST", params, self.get_argument("sessionId")
-        self._sessionsManager.GetSessionTree(self.get_argument("sessionId")).UpdateSelectionFromList(json.loads(self.get_argument("selectedNodes")))
+        tree = self._sessionsManager.GetSessionTree(self.get_argument("sessionId"))
+        
+        if params == "UpdateTreeSelection":
+            tree.UpdateSelectionFromList(json.loads(self.get_argument("selectedNodes")))
+
+        if params == "ClearTree":
+            tree.ClearTree()
+            
         self.finish()
         
 WebServerStopRequested = False

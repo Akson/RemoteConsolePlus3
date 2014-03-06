@@ -112,6 +112,12 @@ RCP = {
 		RefreshTree:function(){
 			RCP.treeRefreshing = true;
 			$('#jstree').jstree('refresh');
+		},
+		
+		ClearTreeOnServer:function(){
+			$.post( '../StreamsTree/ClearTree', { 
+				'sessionId' : RCP.sessionId
+			});
 		}
 		
 }

@@ -74,3 +74,6 @@ class StreamsTree(object):
         for childName in curNode:
             print '    '*(len(nodesStack)-1), childName, curNode[childName]._selected
             self.PrintSubtree(nodesStack+[curNode[childName]]) 
+
+    def ClearTree(self):
+        self._root = StreamsTreeNode()

@@ -56,8 +56,7 @@ $(function() {
 	    }
     
 	    $('#test-button').on('click', function () {
-			$('body').layout().show("south");
-			$("#bottom-information-panel").html("Disconnected. Reconnecting...");
+	    	RCP.ClearTreeOnServer();
 		});
 	});
 });

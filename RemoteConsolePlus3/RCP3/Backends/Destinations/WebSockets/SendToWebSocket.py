@@ -8,7 +8,6 @@ import zmq
 class Backend(object):
     def __init__(self, parentNode):
         self._parentNode = parentNode
-        self._streamName = "DefaultConsole"
         
         self._outcomingSocket = zmq.Context.instance().socket(zmq.PUB)
         self._outcomingSocket.connect("tcp://localhost:"+str(Config["Web server"]["IncomingZmqPort"]))
@@ -18,15 +17,13 @@ class Backend(object):
         Returns a dictionary with object parameters, their values, 
         limits and ways to change them.
         """
-        return {"StreamName":self._streamName}
+        return {}
     
     def SetParameters(self, parameters):
         """
         Gets a dictionary with parameter values and
         update object parameters accordingly
         """
-        if "StreamName" in parameters:
-            self._streamName = parameters["StreamName"]
     
     def ProcessMessage(self, message):
         """
@@ -47,9 +44,8 @@ class Backend(object):
         linkDict = {}
         linkDict["serverAddress"]=Config["Web server"]["Address"]
         linkDict["serverPort"]=Config["Web server"]["Port"]
-        linkDict["sessionId"]=self._streamName
 
-        link = "http://{serverAddress}:{serverPort}/RCP?sessionId={sessionId}".format(**linkDict)
+        link = "http://{serverAddress}:{serverPort}/RCP".format(**linkDict)
         webbrowser.open(link)
 
     def AppendContextMenuItems(self, menu):
