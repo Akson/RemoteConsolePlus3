@@ -49,7 +49,7 @@ class Backend(object):
         linkDict["serverPort"]=Config["Web server"]["Port"]
         linkDict["sessionId"]=self._streamName
 
-        link = "http://{serverAddress}:{serverPort}/OutputConsole/?sessionId={sessionId}".format(**linkDict)
+        link = "http://{serverAddress}:{serverPort}/RCP?sessionId={sessionId}".format(**linkDict)
         webbrowser.open(link)
 
     def AppendContextMenuItems(self, menu):

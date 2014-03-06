@@ -18,6 +18,7 @@ from zmq.eventloop import ioloop
 from zmq.eventloop.zmqstream import ZMQStream
 import os
 from RCP3.Infrastructure.Web.Backend.SessionsManager import SessionsManager
+import time
 ioloop.install()
 
 from random import randint, random
@@ -28,10 +29,14 @@ class IndexHandler(tornado.web.RequestHandler):
         pathDict = {}
         pathDict["serverAddress"]=Config["Web server"]["Address"]
         pathDict["serverPort"]=Config["Web server"]["Port"]
-        pathDict["sessionId"]=self.get_argument("sessionId")
+        sessionId = self.get_argument("sessionId", default=None)
+        if sessionId == None:
+            randomSessionId = str(int(time.time()*1000))
+            self.redirect("/RCP?sessionId="+randomSessionId)
+        pathDict["sessionId"]=sessionId
         
         webSocketPath = "ws://{serverAddress}:{serverPort}/WebSockets/?sessionId={sessionId}".format(**pathDict)
-        self.render("RCP.html", WebSocketPath=webSocketPath, SessionId=self.get_argument("sessionId"))
+        self.render("RCP.html", WebSocketPath=webSocketPath, SessionId=sessionId)
                 
                 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -95,7 +100,8 @@ def Run():
         app = tornado.web.Application([
             (r'/Static/(.*)', tornado.web.StaticFileHandler, {'path': os.path.join(os.path.dirname(__file__), "../Frontend/Static")}),
             (r'/Tmp/(.*)', tornado.web.StaticFileHandler, {'path': Config["Web server"]["Temporary files folder"]}),
-            (r'/OutputConsole/', IndexHandler),
+            (r'/RCP', IndexHandler),
+            (r'/RCP/', IndexHandler),
             (r'/StreamsTree/(.*)', StreamsTreeRequestHandler, dict(sessionsManager=sessionsManager)),
             (r'/WebSockets/', WebSocketHandler, dict(sessionsManager=sessionsManager)),
             
