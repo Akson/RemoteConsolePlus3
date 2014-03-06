@@ -8,16 +8,18 @@ class StreamsTree(object):
     def __init__(self):
         self._root = StreamsTreeNode()
         
-    def IsEnabledStream(self, rawStreamName):
+    def FindStreamNode(self, rawStreamName):
+        newNode = False
         streamName = rawStreamName[:-1]
         streamComponents = streamName.split("/")
         curNode = self._root
         for component in streamComponents:
             if component not in curNode:
                 curNode[component] = StreamsTreeNode()
+                newNode = True
             curNode = curNode[component]
         
-        return curNode._selected
+        return (newNode, curNode._selected)
 
     def GetTreeInJstreeFormat(self):
         #self.PrintSubtree([self._root])

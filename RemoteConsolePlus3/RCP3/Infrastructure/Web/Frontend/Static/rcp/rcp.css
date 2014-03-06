@@ -25,3 +25,8 @@ pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:non
 	background: rgb(150,0,0);
 	font-weight: bold;
 }
+
+#jstree {
+	position: absolute;
+	left: -8px;
+}

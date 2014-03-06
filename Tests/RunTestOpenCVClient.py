@@ -39,20 +39,17 @@ if __name__ == '__main__':
         if ret == False:
             print "No camera"
             time.sleep(1.0)
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         height, width = frame.shape[:2]
         print frame.dtype, frame.shape
 
         rc.SendMessage("Sending image...", "Webcam")
+
         info = {"DataType":"Binary", "BinaryDataFormat":"B", "Dimensions":str(frame.shape)}
         rc.SendMessage(json.dumps({"Value":info}), "Webcam/Info", {"ProcessingSequence":"_Json", "DataType":"JSON"})
-        #rc.SendMessage(frame.tostring(), "@ImageViewer", info)
 
-        info = {"ProcessingSequence":"_Image"}
         ret, buf = cv2.imencode(".jpg", frame)
-        print buf.shape
-        bufStr = buf.tostring()
-        rc.SendMessage(buf.tostring(), "Webcam/Image", info)
+        rc.SendMessage(buf.tostring(), "Webcam/Image", {"ProcessingSequence":"_Image"})
+        print ret, buf.shape
 
         i+=1
         time.sleep(1)

@@ -35,14 +35,10 @@ class Backend(object):
         processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
         
         filePath, link = TmpFilesStorage.NewTemporaryFile("jpg")
-        print filePath
-        print link
         cv2.imwrite(filePath, message["Data"])
         html = '<img src="http://{}" alt="Image should come here">'.format(link)
         processedMessage["Data"] = html
-        
-        print html
-        
+       
         self._parentNode.SendMessage(processedMessage)
         
     def AppendContextMenuItems(self, menu):

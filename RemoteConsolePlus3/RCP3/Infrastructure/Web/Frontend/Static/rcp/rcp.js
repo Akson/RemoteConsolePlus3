@@ -35,8 +35,21 @@ RCP = {
 			messageHtml += "</pre>";
 			return messageHtml
 		},
+		
+		ProcessIncomingServiceMessage : function(message){
+			console.log("Serice message: "+message)
+			if(message === "#ADDED_NEW_STREAM_NODE"){
+				$('#jstree').jstree('refresh');
+			}
+		},
 
 		ProcessIncomingMessage : function(evt){
+			//Service messages start with # symbol
+			if(evt.data[0] == '#'){
+				RCP.ProcessIncomingServiceMessage(evt.data)
+				return;
+			}
+			
 			if(RCP.paused == true)
 				return;
 
@@ -51,7 +64,7 @@ RCP = {
 					RCP.messages.shift().remove();
 				}
 			}
-			$(".ui-layout-center").scrollTop($("#messages").height());
+			messageDiv[0].scrollIntoView();
 		},
 
 		Connect : function(){
@@ -85,15 +98,13 @@ RCP = {
 		},
 
 		OnTreeChanged:function(event, data){
-			console.log("OnTreeSelectionChanged", event, data);
-			if((data.action == "select_node" || data.action == "deselect_node") 
-					&& RCP.treeRefreshing == false){
-				console.log(RCP.treeRefreshing);
+			if(RCP.treeRefreshing === true)
+				return;
+			
+			if(data.action == "select_node" || data.action == "deselect_node"){
 				var jqxhr = $.post( '../StreamsTree/UpdateTreeSelection', { 
 					'sessionId' : RCP.sessionId,
 					'selectedNodes' : JSON.stringify(data.selected)
-				}).done(function() {
-					console.log( "AJAX POS update selection done" );
 				});
 			}
 		},

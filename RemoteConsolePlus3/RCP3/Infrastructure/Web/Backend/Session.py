@@ -13,9 +13,12 @@ class Session(object):
         self._clientConnections.remove(clientConnection)
         
     def ProcessZmqMessage(self, zmqMessage, rawStreamName):
-        if self._streamsTree.IsEnabledStream(rawStreamName): 
+        (isNewNode, isSelectedNode) = self._streamsTree.FindStreamNode(rawStreamName)
+        if isSelectedNode: 
             for clientConnection in self._clientConnections:
                 clientConnection.write_message(zmqMessage)
+                if isNewNode:
+                    clientConnection.write_message("#ADDED_NEW_STREAM_NODE")
             
     def GetStreamsTree(self):
         return self._streamsTree
