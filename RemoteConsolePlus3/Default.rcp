@@ -131,6 +131,10 @@
                 "sourceIdx": 26
             },
             {
+                "destinationIdx": 30,
+                "sourceIdx": 26
+            },
+            {
                 "destinationIdx": 13,
                 "sourceIdx": 27
             },
@@ -141,6 +145,18 @@
             {
                 "destinationIdx": 2,
                 "sourceIdx": 29
+            },
+            {
+                "destinationIdx": 31,
+                "sourceIdx": 30
+            },
+            {
+                "destinationIdx": 32,
+                "sourceIdx": 31
+            },
+            {
+                "destinationIdx": 8,
+                "sourceIdx": 32
             }
         ],
         "Nodes": [
@@ -159,9 +175,7 @@
             {
                 "NodeClass": "DestinationBackendNode",
                 "NodeParameters": {
-                    "backendParameters": {
-                        "StreamName": "DefaultConsole"
-                    },
+                    "backendParameters": {},
                     "backendPath": "RCP3.Backends.Destinations.WebSockets.SendToWebSocket",
                     "position": [
                         1135,
@@ -516,6 +530,44 @@
                         184
                     ],
                     "text": "PSFilter: _2dMatrixTable"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "allowedProcessingSequence": "_Timer"
+                    },
+                    "backendPath": "RCP3.Backends.Processors.Filters.PSFilter",
+                    "position": [
+                        211,
+                        484
+                    ],
+                    "text": "PSFilter"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        400,
+                        482
+                    ],
+                    "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.TimerProcessor.TimerProcessor",
+                    "position": [
+                        607,
+                        481
+                    ],
+                    "text": "TimerProcessor"
                 }
             }
         ]

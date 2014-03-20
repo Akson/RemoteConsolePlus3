@@ -55,6 +55,10 @@ $(function() {
 			$("#bottom-information-panel").html("WebSocket NOT supported by your Browser!");
 	    }
     
+	    $('#RestartConsole').on('click', function () {
+	    	window.location.replace(document.URL.slice(0, document.URL.indexOf("?")));
+		});
+
 	    $('#test-button').on('click', function () {
 	    	RCP.ClearTreeOnServer();
 		});
@@ -69,6 +73,8 @@ $(function() {
 </div>
 <div class="ui-layout-center" >
    	<div class="consoleButtonsPanel">
+	<button id="RestartConsole" class="consoleButtons">New console</button>
+	<br>
 	<button id="ClearButton" class="consoleButtons" onclick="javascript:RCP.ClearConsole()">Clear</button>
 	<br>
 	<button id="FreezeButton" class="consoleButtons" onclick="javascript:RCP.FreezeConsole()">Pause</button>
