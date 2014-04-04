@@ -30,3 +30,11 @@ pre.messageInfo {outline: 1px solid #ccc; padding: 5px; margin: 5px; display:non
 	position: absolute;
 	left: -8px;
 }
+table.HttSubtable {
+	display:none;
+}
+div.timing-block-opener {
+	height:5px; 
+	width:100%; 
+	background-color:rgb(142, 205, 255); 
+}

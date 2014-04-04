@@ -103,7 +103,7 @@ def Run():
         stream.on_recv(sessionsManager.ProcessZmqMessages)
         
         settings = {
-            "debug" : True,
+            "debug" : False,
             "template_path":os.path.join(os.path.dirname(__file__), "../Frontend"),
         }
 
