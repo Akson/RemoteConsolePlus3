@@ -139,6 +139,10 @@
                 "sourceIdx": 26
             },
             {
+                "destinationIdx": 37,
+                "sourceIdx": 26
+            },
+            {
                 "destinationIdx": 13,
                 "sourceIdx": 27
             },
@@ -177,6 +181,22 @@
             {
                 "destinationIdx": 8,
                 "sourceIdx": 36
+            },
+            {
+                "destinationIdx": 38,
+                "sourceIdx": 37
+            },
+            {
+                "destinationIdx": 39,
+                "sourceIdx": 38
+            },
+            {
+                "destinationIdx": 40,
+                "sourceIdx": 39
+            },
+            {
+                "destinationIdx": 1,
+                "sourceIdx": 40
             }
         ],
         "Nodes": [
@@ -638,6 +658,53 @@
                         543
                     ],
                     "text": "Text2Html"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {
+                        "allowedProcessingSequence": "_Histogram"
+                    },
+                    "backendPath": "RCP3.Backends.Processors.Filters.PSFilter",
+                    "position": [
+                        211,
+                        580
+                    ],
+                    "text": "PSFilter"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.DataParsers.DefaultParser",
+                    "position": [
+                        397,
+                        585
+                    ],
+                    "text": "DefaultParser"
+                }
+            },
+            {
+                "NodeClass": "BackendNode",
+                "NodeParameters": {
+                    "backendParameters": {},
+                    "backendPath": "RCP3.Backends.Processors.Graphs.Histogram",
+                    "position": [
+                        588,
+                        592
+                    ],
+                    "text": "Histogram"
+                }
+            },
+            {
+                "NodeClass": "HubMessageProcessingNode",
+                "NodeParameters": {
+                    "position": [
+                        1183,
+                        599
+                    ]
                 }
             }
         ]
