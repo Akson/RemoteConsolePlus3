@@ -41,12 +41,12 @@ class Backend(object):
         fig = matplotlib.pyplot.figure(figsize=(6, 4), dpi=float(96))
         ax=fig.add_subplot(111)
         n, bins, patches = ax.hist(dataArray, bins=50)
-        
 
         processedMessage = {"Stream":message["Stream"], "Info":message["Info"]} 
         
         filePath, link = TmpFilesStorage.NewTemporaryFile("png")
         fig.savefig(filePath,format='png')
+        matplotlib.pyplot.close(fig)
         html = '<img src="http://{}" alt="Image should come here">'.format(link)
         processedMessage["Data"] = html
        
