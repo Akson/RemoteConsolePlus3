@@ -25,6 +25,8 @@ It's a 3rd version of a tool for real time debugging data visualization. This ve
 <li>Copy "cv2.pyd" from "C:\opencv\build\python\x86\2.7\" to "C:\Python27\Lib\site-packages\" or to "RemoteConsolePlus3\RemoteConsolePlus3"</li>
 </ol></li>
 <li>Matplotlib 1.3.1 (http://matplotlib.org/downloads.html)</li>
+<li>easy_install pyparsing</li>
+<li>easy_install dateutils</li>
 </ol>
 It was tested on Windows 7(x64) with these dependencies.<br>
 It was also tested on 8(x64), 8.1(x64) with similar dependecnies.<br>
